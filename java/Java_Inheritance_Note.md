@@ -1,6 +1,10 @@
 
 # Héritage (inheritance)
 
+<p align="center">
+  <img src="Java-Inheritance.png" alt="héritage-java">
+</p>
+  
 est une relation entre deux classes qui permet à une classe de réutiliser les caractéristiques d’une autre classe.
 
   - __Redéfinir (Override)__ en programmation orientée objet signifie réécrire une méthode héritée d'une classe parente dans une classe fille, avec exactement la même signature (même nom, même type et nombre de paramètres), mais avec un corps différent (comportement modifié).
@@ -63,7 +67,7 @@ __Les classes abstraites__ sont utiles pour :
 
 - __Encapsulation de comportements communs__ : Une classe abstraite permet de définir des comportements communs que plusieurs classes peuvent partager. Ces comportements sont souvent abstraits et doivent être implémentés par les sous-classes. la raison pour la quelle , une classe abstraite ne peut pas être instanciée directement, car elle ne représente pas un objet concret.
 
-    _Par exemple_, dans le contexte d'un jeu d'animaux, on peut présenter des classes comme __Cat__, __Dog__, etc., qui représentent des entités réelles. Cependant, ces dernières sont susceptibles de partager plusieurs propriétés (âge, nom, etc.) ou fonctionnalités comme __courir()__, __manger()__. L'idée idéale serait de représenter ces entités dans une classe abstraite __Animal__, qui ne peut pas être instanciée, donc il n'est pas possible d'avoir une entité de type Animal (car cela n'existe pas dans ce contexte). Ensuite, des sous-classes pourraient hériter de cette classe abstraite.
+    _Par exemple_, dans le contexte d'un jeu d'animaux, on peut présenter des classes comme `Cat`, `Dog`, etc., qui représentent des entités réelles. Cependant, ces dernières sont susceptibles de partager plusieurs propriétés (âge, nom, etc.) ou fonctionnalités comme `courir()`, `manger()`. L'idée idéale serait de représenter ces entités dans une classe abstraite `Animal`, qui ne peut pas être instanciée, donc il n'est pas possible d'avoir une entité de type Animal (car cela n'existe pas dans ce contexte). Ensuite, des sous-classes pourraient hériter de cette classe abstraite.
 
     _NB_: L'exemple décrit n'est pas toujours valable, une classe abstraite peut être définie selon le contexte. Par exemple, dans un autre contexte, __Animal __aurait pu être définie comme une classe concrète.
 
