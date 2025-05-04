@@ -11,7 +11,7 @@ ENV FLASK_APP=app.py  # defines environment variable
 
 ```bash
 docker build -t my_app <docker_image_folder>  # build and tag image
-
+                                          # -t for image name 
 
 
 ```
@@ -32,10 +32,13 @@ docker build -t my_app <docker_image_folder>  # build and tag image
 
 ```
 
-
-
-
-
+- Exemple
+   ```Docker 
+      FROM  nginx
+      COPY index.html usr/share/ngix/html
+      Expose 80  # nginx ecoute sur un port interne 80 (intérieur du container)
+   
+   ```
 
 ---
 
@@ -50,7 +53,7 @@ docker network create mon_reseau              # créer un réseau
 docker run --net mon_reseau postgres          # rattacher un conteneur à ce réseau
 ```
 
----
+
 
 
 # make Nework command  here   
