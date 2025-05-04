@@ -35,6 +35,24 @@
 - `git branch <branch_name>`: creer une  branch `branch_name`;
 - `git branch -d <branch_name>`: supprimer la  branche `branch_name`;
 
+- `git diff <fichier | dossier>` : affiche les différences entre le contenu actuel et l'index (staging area) pour un fichier ou un dossier spécifique.
+    - `git diff --staged` :affiche les différences entre l’index (staging area) et le dernier commit (HEAD), c’est-à-dire les changements prêts à être commités 
+    - `git diff <commit_id_1> <commit_id_2>` :affiche les différences entre deux commits spécifiques.
+
+
+
+- `git stash` enregistre temporairement les modifications non commités dans une pile (stash) et restaure l’arborescence de travail à l’état du dernier commit. Utile avant de changer de branche.
+
+- `git stash push -m "WIP: correction bug login"` git a message to stash
+
+
+- `git stash list` :   liste tous les éléments enregistrés dans le stash avec leurs identifiants (ex : `stash@{0}`). 
+
+- `git stash pop [<stash_id>]` : restaure les modifications depuis le stash (par défaut le dernier), puis supprime l’entrée du stash.
+
+
+- `git stash apply`  restaure les modifications depuis le stash sans supprimer l’entrée (contrairement à `pop`).
+
 ## Merge
 
 <p align="center">
@@ -60,6 +78,13 @@ Tout ce qui se trouve entre ``<<<<<< HEAD et ======`` correspond aux modificatio
 </p>
 
 
+## Git Rebase
+
+`git rebase` est une commande Git puissante qui permet de rejouer les commits d'une branche par-dessus une autre branche, comme si tu avais commencé à travailler à partir de cette autre branche depuis le début.
+
+<p align="center">
+  <img src="rebase.png" alt="rebase">
+</p>
 
 
 
