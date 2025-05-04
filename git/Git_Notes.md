@@ -87,7 +87,30 @@ Tout ce qui se trouve entre ``<<<<<< HEAD et ======`` correspond aux modificatio
 </p>
 
 
+### différence entre `git merge` et `git rebase`
 
+ _exemple_ : 
+ - situation initiale
+     ```bash         
+            main:     A---B---C
+            feature:       \---D---E
+      ```
+  - Avec `git merge` feature (sur la branche feature) :
+    ```bash
+      main:     A---B---C------- M  (commit de fusion)    
+      feature:       \---D---E /
+    ```
+ 
+  - Avec `git rebase` main : (D' et E' sont des nouveaux commits, équivalents à D et E mais repositionnés sur main.)
+    ```bash
+      main:     A---B---C---D'---E'
+    ```
+
+__Note :__ Le merge fonctionne différemment du rebase :
+
+  Par exemple, si nous avons deux branches `main` et `feature`, pour intégrer les modifications de `feature` dans `main` (c'est-à-dire de `feature` vers `main`), il faut être dans la branche `main` et exécuter la commande  `git merge feature`.
+
+  Maintenant, si l'on souhaite intégrer les modifications de `feature` dans `main` tout en conservant un historique linéaire, il faut être dans `feature` et exécuter  `git rebase main`.
 
 
 
