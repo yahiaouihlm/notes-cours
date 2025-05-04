@@ -44,3 +44,32 @@ La version 1.4 est souvent utilisée pour les projets simples.
 
 - `DInteractiveMode=false` : Exécute la commande sans poser de questions à l'utilisateur.
 Cela permet une génération automatisée du projet (pratique pour les scripts ou l’apprentissage).
+
+Après l'exécution de la commande, il faut ensuite créer le package (par exemple `HalimApp`), qui va englober l'ensemble de l'application
+
+__Maven place-t-il les fichiers JAR téléchargés ?__ 
+Lorsque Maven télécharge une dépendance, il la place dans son dépôt local, qui se trouve dans ton répertoire utilisateur.
+Par défaut, ce dépôt est situé dans :
+-   `Sous Windows` : C:\Users\<nom_utilisateur>\.m2\repository
+
+- ``Sous macOS/Linux`` : /Users/<nom_utilisateur>/.m2/repository ou /home/<nom_utilisateur>/.m2/repository
+
+
+
+## commandes maven
+Pour utiliser correctement les commandes `maven`, il faut se placer dans la racine du projet, là où se trouve le fichier `pom.xml`  
+
+
+
+- `mvn compile` :  Analyse le fichier pom.xml, télécharge les dépendances nécessaires (si elles ne sont pas encore dans le dépôt local .m2/repository), puis compile les fichiers source Java (src/main/java) et place les fichiers .class générés dans le dossier target/classes
+
+- `mvn test` : Exécute les tests unitaires situés dans src/test/java à l’aide de JUnit ou d’autres frameworks de test, après compilation des classes de test et des classes principales
+
+
+- `mvn package` : il va  d'abord `compiler`, lancer  les  `test` et au  finale  générer le jar 
+
+- `mvn dependency: tree` , `mvn dependency:lsit` :  afficher  toutes les  depndences  externe d'un projet 
+
+- `mvn dependency:build-classpath`:afficher toues l'emplacement  de toutes les  dependences .jar  utilisé 
+
+- `D<nom_de_la_propriété>=<valeur_à passer>` :L’option -D dans Maven sert à passer un paramètre système (une propriété) à l'exécution de la commande. Elle a cette forme : exp `mvn test -Dtest=*ServiceTest` executer  tous les  test  qui  termine  par ServiceTest
