@@ -43,20 +43,102 @@ docker build -t my_app <docker_image_folder>  # build and tag image
 ---
 
 ## 🌐 Docker Network
+Un network Docker (réseau Docker) est une couche d’abstraction que Docker utilise pour permettre à des conteneurs de communiquer entre eux et avec l’extérieur.
 
 - Les conteneurs tournent dans des **réseaux isolés**
 - On peut en connecter plusieurs au **même réseau personnalisé**
 
+
+## types de Networking In Docker
+
+# 🌐 Réseaux Docker
+
+### 🧱 Bridge (mode par défaut)
+- Mode de réseau **par défaut** utilisé lorsqu’un conteneur est lancé sans configuration spécifique.
+- Docker crée un **réseau privé interne** sur le système hôte.
+- Chaque conteneur reçoit une adresse IP (souvent dans la plage `172.17.0.x`).
+- Les conteneurs peuvent **communiquer entre eux** via leurs adresses IP internes.
+- Pour accéder à un conteneur depuis l’extérieur (hors du host), il faut **mapper ses ports** sur ceux du système hôte (`-p 8080:80`).
+
+---
+
+### 🌐 Host
+- Le conteneur utilise **la pile réseau du système hôte**.
+- Il **ne possède pas d’interface réseau propre**.
+- Améliore les performances, mais réduit l'isolation.
+- Ex : un service exposé sur le port `80` dans le conteneur est accessible directement via `localhost:80`.
+
+
+### 🚫 None
+- Le conteneur n’a **aucun accès réseau**.
+- Aucune communication possible avec d'autres conteneurs ou l’extérieur.
+- Utilisé pour des cas d'**isolement complet**, comme des tests de sécurité.
+
+
+
+### 🔄 Overlay
+- Permet aux conteneurs situés sur **plusieurs hôtes Docker** (dans un cluster) de communiquer.
+- Crée un réseau virtuel **au-dessus des réseaux physiques**.
+- Utilisé principalement avec **Docker Swarm** ou des orchestrateurs.
+
+
+
+### 🛠️ Macvlan
+- Le conteneur obtient une **adresse IP du réseau local physique** (comme une machine physique).
+- Utile lorsque le conteneur doit être **directement visible** sur le réseau local.
+- Exemple d’usage : serveur DHCP, NAS virtuel, etc.
+
+
+### Creation 
+```bash 
+docker network create  --driver bridge  --subnet 182.18.0.0/16  mon_resea #create network
+```
+- `--driver brige` : indique que le réseau est de type bridge (par défaut).
+- `--subnet` : (optionnel) permet de spécifier une plage d'adresses IP personnalisée.
+Si elle est omise, Docker attribue une plage automatiquement.
+
+
+
 ```bash
 docker network ls                             # lister les réseaux
-docker network create mon_reseau              # créer un réseau
 docker run --net mon_reseau postgres          # rattacher un conteneur à ce réseau
+docker inspect <container_id> #voir des information sur le  netwrok d'un container
 ```
+### DNS (Docker Name Spaces)
+Docker intègre un système de résolution DNS interne, permettant aux conteneurs de communiquer entre eux en utilisant leurs **noms** plutôt que leurs **adresses IP**.
+   ### 🔍 Fonctionnement :
+   - Docker démarre automatiquement un **serveur DNS interne** (à l'adresse `127.17.0.11`) pour résoudre les noms des conteneurs dans un réseau Docker.
+   - Ce serveur DNS permet d’**associer dynamiquement un nom de conteneur à son adresse IP**.
+   - Il est **recommandé d’utiliser les noms des conteneurs** plutôt que leurs adresses IP, car ces dernières peuvent changer à chaque redémarrage.
+   ## ✅ Avantages :
+
+   - 🔄 Pas besoin de reconfigurer les IP si les conteneurs redémarrent.
+   - 🤝 Communication plus simple entre conteneurs dans le même réseau Docker.
+   - 🧠 Meilleure lisibilité et maintenance du code ou des fichiers de configuration.
+
+   📦 Exemple :
+
+   | Conteneur     | Adresse IP    |
+   |---------------|----------------|
+   | `web`         | `172.17.0.2`   |
+   | `mysql`       | `172.14.0.4`   |
+
+   Au lieu de se connecter à `172.14.0.4`, le conteneur `web` peut simplement utiliser le nom `mysql` pour accéder à la base de données.
+
+   ```bash
+   # Exemple de connexion dans un conteneur web à MySQL
+   mysql -h mysql -u root -p
+   ```
+
+
+-------------------------------------
 
 
 
 
-# make Nework command  here   
+
+
+
 
 
 
