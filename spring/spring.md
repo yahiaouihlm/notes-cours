@@ -1,6 +1,6 @@
-# Sring 
+# Spring 
 
-## Sring Configuration 
+## Spring Configuration 
 
 ### Configuration spring logger
  propriétés utiles pour configurer les logs dans une application Spring Boot via le fichier application.properties.
