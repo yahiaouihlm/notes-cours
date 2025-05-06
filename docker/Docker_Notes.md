@@ -24,7 +24,8 @@ docker build -t my_app <docker_image_folder>  # build and tag image
 - ENV         : Set environment variables.
 - EXPOSE      : Expose a specific port to enable networking between the container and the outside world.
 - FROM        : Define the base image used to start the build process.
-- MAINTAINER  : Specify the full name and email address of the image creator. *(Note: deprecated in favor of LABEL)*
+- MAINTAINER  : Specify the full name and email address of the image creator. (Note: deprecated
+                in favor of LABEL )
 - RUN         : Execute commands in a new layer on top of the current image and commit the results.
 - USER        : Set the user (by username or UID) to run the container.
 - VOLUME      : Enable access from the container to a directory on the host machine.
@@ -39,6 +40,13 @@ docker build -t my_app <docker_image_folder>  # build and tag image
       Expose 80  # nginx ecoute sur un port interne 80 (intérieur du container)
    
    ```
+
+## Docker layred Architecture : 
+Dans Docker, les `layers` (couches) font référence aux différentes étapes ou couches qui composent une image Docker. Chaque fois que vous exécutez une instruction dans un fichier Dockerfile (comme `RUN`, `COPY`, ou `ADD`), Docker crée une nouvelle couche. Ces couches sont empilées les unes sur les autres pour former l'image complète.
+
+les layers dans Docker permettent de gérer l'efficacité des images, en optimisant la taille, le cache et la réutilisation des composants entre différentes images.
+
+
 
 ---
 
@@ -292,3 +300,134 @@ docker run -e ABC=123 -e DEF=456 python:3.12   python -c "import os; print(os.en
 ```bash
 docker run --name my_container -v /data/volume:/app/user my_image  sleep infinity
 ```
+
+
+
+# Dcoker compose 
+
+## c'est  quoi ? 
+Docker Compose est un outil qui permet de définir et de gérer des applications multi-conteneurs Docker. Au lieu de devoir gérer chaque conteneur individuellement, Docker Compose vous permet de définir une configuration pour plusieurs conteneurs dans un fichier unique, généralement appelé `docker-compose.yml`, et de les lancer en même temps avec une seule commande.
+
+```bash 
+  docker compose up #lancer un docker  compose f
+```
+
+## exemple d'un fichier doker compose 
+
+```yaml
+version: '3'  # Spécifie la version du fichier Compose (ici version 3)
+
+services:  # Définition des services (conteneurs) de l'application
+  web:  # Nom du service (le conteneur "web")
+    image: my-web-app  # L'image Docker à utiliser pour ce service
+    build: ./web  # (Optionnel) L'emplacement d'un Dockerfile pour construire l'image
+    ports:
+      - "8080:80"  # Redirection des ports du conteneur vers l'hôte (hôte:conteneur)
+    volumes:
+      - ./data:/data  # Montage de volumes entre l'hôte et le conteneur
+    environment:
+      - NODE_ENV=production  # Variables d'environnement à définir dans le conteneur
+    networks:
+      - webnet  # Réseau auquel ce service appartient
+
+  db:  # Nom du service (le conteneur "db")
+    image: postgres:latest  # L'image Docker pour le service de base de données
+    environment:
+      POSTGRES_PASSWORD: example  # Variable d'environnement pour définir un mot de passe
+    volumes:
+      - db_data:/var/lib/postgresql/data  # Volumes pour persister les données
+    networks:
+      - webnet  # Réseau auquel ce service appartient
+
+volumes:  # Définition des volumes persistants
+  db_data: {}  # Un volume nommé pour stocker les données de la base de données
+
+networks:  # Réseaux pour connecter les services entre eux
+  webnet:  # Nom du réseau
+    driver: bridge  # Type de réseau (par défaut "bridge")
+
+```
+
+## Docker compose , docker-compose
+__docker-compose :__ Utilisé avec l'ancienne version (avant Docker 1.27.0), où Docker Compose était un outil séparé.
+
+__docker compose :__ Utilisé dans les versions récentes de Docker où Docker Compose est intégré dans l'outil principal Docker.
+
+## commandes docker compose
+
+### 1. `docker-compose up [options]` : 
+-  Cette commande démarre tous les services définis dans le fichier `docker-compose.yml`.
+  
+    Options courantes :
+    - `-d` : Exécute les services en mode détaché (en arrière-plan).
+    - `--build `: Reconstruit les images avant de démarrer les services.
+    - `-no-deps` : Ne pas démarrer les dépendances des services.
+
+### 2. `docker-compose down [options]` : 
+-  Arrête et supprime tous les conteneurs, réseaux et volumes associés aux services définis dans le fichier  `docker-compose.yml`.
+  
+    Options courantes :
+    - `--volumes`ou `-v` : Supprime les volumes associés aux services en plus des conteneurs et réseaux.
+    - `--rmi all` : Supprime toutes les images liées aux services.
+
+### 3. `docker-compose ps` : 
+- Affiche l'état des conteneurs pour tous les services définis dans le fichier `docker-compose up`
+
+
+
+### 4. `docker-compose logs [options] [service...]` : 
+-  Affiche les journaux des services en cours d'exécution. Vous pouvez également cibler un service spécifique.
+  
+    Options courantes :
+    - `--f` : Affiche les journaux en temps réel (similaire à `tail -f`).
+    - `--rmi all` : Affiche tous les journaux (par défaut, seulement les 100 dernières lignes).
+
+
+### 5. `docker-compose build [options] [service...]` : 
+-  Construit ou reconstruit les images des services définis dans le fichier `docker-compose up`
+.
+  
+    Options courantes :
+    - `--no-cache` : Ne pas utiliser le cache lors de la construction des images.
+    - `--pull` : Force le téléchargement de l'image la plus récente avant de construire.lignes).    
+
+
+### 6. `docker-compose start` : 
+-  Démarre les services existants sans les reconstruire. Cette commande démarre les conteneurs créés par `docker-compose up`
+  
+ 
+
+ ### 7. `docker-compose stop` : 
+-  Arrête les services en cours d'exécution sans les supprimer.
+  
+ 
+
+### 8. `docker-compose restart` : 
+-  Redémarre tous les services (équivalent à `docker-compose stop` suivi de `docker-compose start`).
+  
+
+
+ ### 9. `docker-compose exec [service] [commande]` : 
+-  Exécute une commande dans un conteneur en cours d'exécution. Cela vous permet d'interagir avec un service en utilisant son conteneur.
+  excemple : ```docker-compose exec web bash```
+  
+
+
+ ### 10. `docker-compose run [options] [service] [commande]` : 
+-  Crée et exécute un conteneur pour un service, mais ne l'ajoute pas à l'environnement de réseau des autres services. C'est utile pour exécuter des commandes ponctuelles.
+   
+
+   
+ ### 11. `docker-compose config` : 
+-  Affiche la configuration du fichier docker-compose.yml après avoir résolu les variables d'environnement, les extensions, etc. Cette commande permet de valider la configuration.
+
+ ### 12. `docker-compose pull` : 
+-  Télécharge les images des services définis dans le fichier docker-compose.yml à partir d'un registre Docker (comme Docker Hub).
+
+
+ ### 13. `docker-compose push` : 
+-  Pousse les images des services définis dans le fichier docker-compose.yml vers un registre Docker (comme Docker Hub).
+
+
+ ### 13. `docker-compose version` : 
+-  Affiche la version de Docker Compose installée..
