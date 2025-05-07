@@ -67,3 +67,8 @@
     # Format du log console
     logging.pattern.console=%d{HH:mm:ss} %-5level %logger{36} - %msg%n
 ``` 
+
+
+
+
+
