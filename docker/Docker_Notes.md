@@ -233,9 +233,9 @@ docker inspect container_id                      # métadonnées du conteneur
 
 ```bash
 docker pull image_name         # télécharger une image
-docker run image_name          # lancer une image
+docker run image_name          # creer et lancer une image
 docker run -d image_name       # détaché
-docker start container_id      # démarrer un conteneur
+docker start container_id      # démarrer un conteneur en  détach mode
 docker stop container_id       # stopper
 docker rm container_id         # supprimer
 docker rm -f container_id      # forcer la suppression
@@ -265,6 +265,7 @@ docker run -d --name my_container -v myvolume:/data -u <user_name> or <user_id> 
 
 ```bash
 docker rm $(docker ps -aq --filter status=exited)
+docker ps -a -q --filter ancestor=postgres:latest  # image de lancement est  postgres:latest  ancestor=postgres:latest 
 ```
 
 ---
