@@ -12,6 +12,13 @@
     -DinteractiveMode=false                   # ✅ Important : permet une génération sans intervention manuelle
 
  ```
+- ## Note : sur powerShell window il faut utiliser "" pour  encadrer les option
+   ```bash
+   mvn archetype:generate "-DgroupId=fr.sqli.testapp" "-DartifactId=testapp" "-DarchetypeArtifactId=maven-archetype-quickstart" "-DarchetypeVersion=1.5" "-DinteractiveMode=false"
+   ```
+
+
+
  - `-DgroupeId=fr.sqli`: Identifiant unique représentant l’organisation ou   le groupe de projets.
 Il correspond généralement au nom de domaine inversé de l’entreprise (ex : com.google, fr.sqli).
 Il définit aussi la structure de package Java par défaut (fr.sqli).
