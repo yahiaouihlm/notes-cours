@@ -68,15 +68,18 @@ Pour utiliser correctement les commandes `maven`, il faut se placer dans la raci
 
 
 
-- `mvn compile` :  Analyse le fichier pom.xml, télécharge les dépendances nécessaires (si elles ne sont pas encore dans le dépôt local .m2/repository), puis compile les fichiers source Java (src/main/java) et place les fichiers .class générés dans le dossier target/classes
+- ✅`mvn compile` :  Analyse le fichier pom.xml, télécharge les dépendances nécessaires (si elles ne sont pas encore dans le dépôt local .m2/repository), puis compile les fichiers source Java (src/main/java) et place les fichiers .class générés dans le dossier target/classes
 
-- `mvn test` : Exécute les tests unitaires situés dans src/test/java à l’aide de JUnit ou d’autres frameworks de test, après compilation des classes de test et des classes principales
+- ✅`mvn test` : Exécute les tests unitaires situés dans src/test/java à l’aide de JUnit ou d’autres frameworks de test, après compilation des classes de test et des classes principales
 
+-  ✅`mvn  clean` :Supprime le dossier `target/ `du projet,Ce dossier contient les fichiers compilés, les classes .class, les JAR/WAR générés, etc.
 
-- `mvn package` : il va  d'abord `compiler`, lancer  les  `test` et au  finale  générer le jar 
+- ✅`mvn install`: Compile le projet (compile),Exécute les tests (test).Génère les fichiers .jar ou .war dans target/ (package),  Installe le JAR/WAR résultant dans ton dépôt Maven local (~/.m2/repository), ce qui le rend réutilisable par d'autres projets Maven sur ta machine.
 
-- `mvn dependency: tree` , `mvn dependency:lsit` :  afficher  toutes les  depndences  externe d'un projet 
+- ✅`mvn package` : il va  d'abord `compiler`, lancer  les  `test` et au  finale  générer le jar 
 
-- `mvn dependency:build-classpath`:afficher toues l'emplacement  de toutes les  dependences .jar  utilisé 
+- ✅`mvn dependency: tree` , `mvn dependency:lsit` :  afficher  toutes les  depndences  externe d'un projet 
 
-- `D<nom_de_la_propriété>=<valeur_à passer>` :L’option -D dans Maven sert à passer un paramètre système (une propriété) à l'exécution de la commande. Elle a cette forme : exp `mvn test -Dtest=*ServiceTest` executer  tous les  test  qui  termine  par ServiceTest
+- ✅`mvn dependency:build-classpath`:afficher toues l'emplacement  de toutes les  dependences .jar  utilisé 
+
+- ✅`D<nom_de_la_propriété>=<valeur_à passer>` :L’option -D dans Maven sert à passer un paramètre système (une propriété) à l'exécution de la commande. Elle a cette forme : exp `mvn test -Dtest=*ServiceTest` executer  tous les  test  qui  termine  par ServiceTest
