@@ -101,6 +101,57 @@ du code côté serveur (souvent Java, mais aussi .NET, Python, etc.)
     | Objectif principal | Réponse rapide de fichiers | Exécution de logique métier |
 
 
+## Filter Tomcat 
+`Tomcat`, tout comme chaque conteneur web, prend en charge le concept de `Filter`, défini par les spécifications Java EE (aujourd'hui Jakarta EE).
+
+Un filtre permet d'intercepter toutes les requêtes HTTP (ou certaines) avant qu'elles n'atteignent une servlet (comme le `DispatcherServlet`de Spring ou une `HttpServlet` classique).
+Autrement dit, avant que Tomcat ne transmette la requête à la servlet, il peut appliquer une chaîne de filtres pour analyser, modifier ou valider la requête HTTP.
+
+
+
+__📌 Rôle d’un Filter__
+-   Ajouter des en-têtes HTTP
+
+-   Journaliser (logs) les requêtes
+
+-   Gérer la sécurité (authentification)
+
+-   Compresser/décompresser
+
+-   Gérer le CORS
+
+-   Modifier la requête ou la réponse
+
+
+__🔁 Cycle de traitement__
+
+````
+    [Client HTTP]
+          ↓
+      [Tomcat]
+        ↓
+    [Filter1] → [Filter2] → … → [DispatcherServlet or HttpServlet]
+                                          ↓
+                                     [Controller]
+````
+
+
+__✅ Exemple de Filter__
+
+```java
+    @WebFilter(urlPatterns = "/*")
+    public class MyLoggingFilter implements Filter {
+        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+                throws IOException, ServletException {
+            System.out.println("🔍 Requête interceptée : " + ((HttpServletRequest) request).getRequestURI());
+            chain.doFilter(request, response); // Continue vers le prochain filtre ou la servlet
+        }
+    }
+```
+
+👉 Ce filtre affiche chaque URI de requête entrante.
+
+
 ## Configuration de Tomcat dans Spring Boot
 Voici une liste des propriétés que vous pouvez utiliser pour configurer Tomcat dans une application Spring Boot via le fichier `application.properties` ou `application.yml`.
 
