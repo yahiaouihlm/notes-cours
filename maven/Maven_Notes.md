@@ -78,6 +78,8 @@ Pour utiliser correctement les commandes `maven`, il faut se placer dans la raci
 
 - ✅`mvn package` : il va  d'abord `compiler`, lancer  les  `test` et au  finale  générer le jar 
 
+- ✅ `mvn dependency:go-offline`: est une commande Maven qui sert à pré-télécharger toutes les dépendances de ton projet pour pouvoir compiler ou lancer Maven sans connexion Internet par la suite.
+
 - ✅`mvn dependency: tree` , `mvn dependency:lsit` :  afficher  toutes les  depndences  externe d'un projet 
 
 - ✅`mvn dependency:build-classpath`:afficher toues l'emplacement  de toutes les  dependences .jar  utilisé 
