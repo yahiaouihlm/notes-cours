@@ -2,7 +2,7 @@
 Spring MVC (Model-View-Controller) est un module du framework Spring qui permet de créer des applications web en Java suivant le modèle de conception MVC. Il est très utilisé pour construire des API REST ou des applications web classiques côté serveur (avec des vues HTML/JSP).
 
 <p align="center">
-  <img src="springMVC.png" alt="architecture spring mvc ">
+  <img src="sources/springMVC.png" alt="architecture spring mvc ">
 </p>
 
 
@@ -12,7 +12,7 @@ Spring MVC (Model-View-Controller) est un module du framework Spring qui permet 
 
 
 <p align="center">
-    <img src="spring-mvc.png" alt="architecture spring mvc ">
+    <img src="sources/spring-mvc.png" alt="architecture spring mvc ">
 </p>
 
 Spring MVC suit le modèle architectural `Model-View-Controller.` Les données sont préparées dans le modèle (`Model`), puis injectées dans la vue (par exemple via Thymeleaf), et les contrôleurs (`@Controller`) servent à traiter les requêtes, exécuter la logique métier, et retourner la vue à afficher avec les données.
@@ -21,7 +21,7 @@ Spring MVC suit le modèle architectural `Model-View-Controller.` Les données s
 ## SERVLET
 
 <p align="center">
-    <img src="servlet.png" alt="servlet">
+    <img src="sources/servlet.png" alt="servlet">
 </p>
 
 - dans les applications  web rendu html  coté  serveur en générale on utilise  `doGet(req ,resp)` ,  `doPost(req,resp)`
@@ -52,9 +52,9 @@ Ces servlets doivent être des classes qui étendent `HttpServlet`.
         }
      ```
 - ### 🔸 Option 2 : Spring MVC
-   - Spring fournit une servlet spéciale : DispatcherServlet (elle étend HttpServlet aussi).
+   - Spring fournit une servlet spéciale : __`DispatcherServlet`__ (elle étend HttpServlet aussi).
    - C’est elle qui est enregistrée auprès de Tomcat (automatiquement par Spring Boot ou manuellement dans web.xml).
-   - Ensuite, DispatcherServlet délègue le travail aux @Controller.
+   - Ensuite, __``DispatcherServlet``__ délègue le travail aux __`@Controller`__.
         ```java
           public class DispatcherServlet extends HttpServlet {
             // gère les requêtes, les routes, les contrôleurs Spring, etc.
@@ -63,17 +63,18 @@ Ces servlets doivent être des classes qui étendent `HttpServlet`.
 ✅ __DispatcherServlet__ = une servlet __HttpServlet__ Spring qui remplace ta propre servlet manuelle.
 
 
+```
+```
 
 
 
-
-## déployer une  `servlet` :  (sans springMVC)
+## Déployer une  `servlet` :  (sans springMVC)
 pour initiliser  une sevlet  soit  on  la déclare  dans une fichier `web.xml` soit via annotation `@WebServelt (name="test",  urlPaterns="/hello",".do")`
 
 - __via le `web.xml`__
 
    <p align="center">
-        <img src="webxml.png" alt="web servlet">
+        <img src="sources/webxml.png" alt="web servlet">
     </p>
 
 
@@ -81,7 +82,7 @@ pour initiliser  une sevlet  soit  on  la déclare  dans une fichier `web.xml` s
 - __via l'annotation `@WebServlet` (annotation JEE)__    
 
     <p align="center">
-        <img src="webServlet.png" alt="web servlet">
+        <img src="sources/webServlet.png" alt="web servlet">
     </p>
 
 
@@ -93,10 +94,11 @@ pour initiliser  une sevlet  soit  on  la déclare  dans une fichier `web.xml` s
 
 
 ## Deployer une Servlet :  (Avec SpringMVC) 
+Pour déployer une ``servlet`` avec ``Spring MVC``, Spring utilise sa propre logique d'initialisation via le ``DispatcherServlet``.
+Ce dernier hérite de ``HttpServlet``, ce qui permet à Spring d’intégrer son propre mécanisme de gestion des requêtes HTTP.
 
-
-
-
+Grâce à cette architecture, Spring offre un ensemble d’annotations telles que ``@Controller``, facilitant la déclaration, l’organisation et le déploiement de nos différents contrôleurs.
+Pour en savoir plus, consulte la section  [« Détail des annotations Spring MVC courantes »](#détail-des-annotations-spring-mvc-courantes).
 
 
 
@@ -110,6 +112,69 @@ pour initiliser  une sevlet  soit  on  la déclare  dans une fichier `web.xml` s
 
 
 Pour les APIs, on utilise souvent `@RestController`(qui combine @Controller + `@ResponseBody`).
+
+
+
+
+
+## utilisation  spring MVC 
+
+- __pour architecture rendu HTML coté Serveur__ 
+
+    <p align="center">
+        <img src="sources/mvc.png" alt="web servlet">
+    </p>
+
+
+    Grâce à des moteurs de template comme `Thymeleaf`, il est possible d’injecter directement les données provenant du modèle.
+    Le modèle (objet de type `Model`) est fourni par Spring et sert à stocker les informations à transmettre à la vue.
+ 
+
+
+- __pour architecture rendu HTML coté Client__ 
+  <p align="center">
+        <img src="sources/mvc-client.png" alt="web servlet">
+  </p>
+
+   Dans ce cas, les données renvoyées au client sont au format `JSON`, et la vue est construite côté client à l’aide de frameworks JavaScript tels que `Angular` `React`,`Vue`
+
+
+
+````
+````
+## Spring Web 
+👉 spring-web ≠ spring-webmvc, même si Spring MVC fait partie de Spring Web.
+
+📌 Détail des différences :
+    Élément	Contient quoi ?
+    spring-web	Composants de base pour les applis web : support HTTP, RestTemplate, @RequestBody, etc.
+    spring-webmvc	Implémentation complète du pattern MVC (Model-View-Controller) : DispatcherServlet, annotations @Controller, @RequestMapping, gestion des vues, etc.
+
+```
+  spring-web
+│
+├── Utilitaires HTTP
+├── Sérialisation JSON/XML
+└── ─────────────────────────
+     ▲
+     │
+spring-webmvc
+├── DispatcherServlet
+├── Gestion des vues
+├── Mapping des URLs
+└── Annotations MVC (@Controller, etc.)
+
+
+```
+
+Spring Web dans Spring Initializr = un starter complet qui inclut `Spring MVC`, `Spring Web`, `Jackson`, `Tomcat`, etc.
+
+📦 ``Qu'est-ce que spring-boot-starter-web ?``
+C’est un starter fourni par Spring Boot.
+Il sert à rapporter toutes les dépendances nécessaires pour créer une application web complète (API REST ou MVC classique).
+````
+````
+
 
 
 ## 🔍 Détail des annotations Spring MVC courantes
@@ -144,6 +209,8 @@ Le nom retourné correspond à un template à rendre côté serveur.
                     return "home"; // → renvoie home.html
                 }
             }
+
+            // Model  est  objet fournit par  spring MVC
     ```
 ## 📡 @ResponseBody
 
