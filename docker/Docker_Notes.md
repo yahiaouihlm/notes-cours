@@ -35,18 +35,33 @@ docker build -t my_app <docker_image_folder>  # build and tag image
 
 - Exemple
    ```Docker 
+      WORKDIR app  # mkdir app + cd app 
+      #appartir de la je  suis dans app
+      Copy test /app  #erreur  car ça fait app/app/test
+   
+   ```
+
+- Exemple
+   ```Docker 
       FROM  nginx
       COPY index.html usr/share/ngix/html
       Expose 80  # nginx ecoute sur un port interne 80 (intérieur du container)
    
    ```
 
+
 ## Docker layred Architecture : 
 Dans Docker, les `layers` (couches) font référence aux différentes étapes ou couches qui composent une image Docker. Chaque fois que vous exécutez une instruction dans un fichier Dockerfile (comme `RUN`, `COPY`, ou `ADD`), Docker crée une nouvelle couche. Ces couches sont empilées les unes sur les autres pour former l'image complète.
 
 les layers dans Docker permettent de gérer l'efficacité des images, en optimisant la taille, le cache et la réutilisation des composants entre différentes images.
 
+## 📝 Note importante sur les layers (multi-stage build)
+Dans un fichier `Dockerfile`, chaque instruction `FROM` démarre une nouvelle image de base et écrase l’environnement précédent.
+Pour compiler un projet par exemple  `Maven`, on peut commencer par une image maven (ex : `FROM maven:...`) pour effectuer la compilation.
+Ensuite, à la fin de la construction, on utilise une deuxième `FROM` basée sur une image plus légère, comme openjdk ou jre, pour ne copier que le .jar final.
+Cela permet d’obtenir une image finale plus légère, contenant uniquement le Java Runtime (JRE) et l’application, sans Maven ni les fichiers de build.
 
+__`--from=build `__ dans  COPY fait référence à une image Docker construite précédemment, et non à ton répertoire local (sur ton ordinateur). En fait, --from=build signifie que tu copies des fichiers depuis une autre étape du Dockerfile, et cette étape correspond à l'alias build que tu as défini dans le premier FROM.
 
 ---
 
