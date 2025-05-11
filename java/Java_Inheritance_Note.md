@@ -156,3 +156,8 @@ Conversion manuelle d’un type plus grand vers un type plus petit, car cela peu
      ✅ Le code compile correctement car le compilateur voit que Cat hérite de Animal, donc le cast est syntaxiquement valide.
 
      ❌ Mais à l'exécution, tu obtiendras une ClassCastException, car l’objet réel pointé par a est un Animal, pas un Cat.
+
+## important
+si  une `class A` extends une  `class B` 
+
+dans le constructeur de  la class  B le super() devrait etre applé (implicitement  si  y'a pas de paramette ) et explicitement  sinon 
