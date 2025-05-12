@@ -19,6 +19,62 @@ La **propagation** définit le comportement de la transaction en fonction de l'e
 - **`REQUIRED`** (par défaut) : Si une transaction existe déjà, la méthode utilise cette transaction. Sinon, elle en crée une nouvelle.
 - **`REQUIRES_NEW`** : La méthode crée une nouvelle transaction, indépendamment de toute transaction existante. Cela peut être utile pour s'assurer qu'une certaine opération soit réalisée indépendamment des autres (comme dans le cas des services qui manipulent des entités critiques).
 
+Lorsque tu appelles une méthode annotée avec `@Transactional` depuis une méthode interne dans la même classe, Spring ne gère pas la transaction. Cela est dû au fait que Spring utilise des proxies dynamiques pour la gestion des transactions, et ces proxies ne sont pas appliqués lors d'un appel interne.
+
+```java
+@Service
+public class UserService {
+
+    @Transactional
+    public void addFriend() {
+        // Code pour ajouter un ami
+        System.out.println("Ajout d'un ami");
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void processFriendship() {
+        // Code avant l'ajout de l'ami
+        addFriend();  // Appel interne qui ne démarrera pas une nouvelle transaction, mais comme `addFriend()` est annoté, une transaction est activée ici
+        // Code après l'ajout de l'ami
+    }
+}
+```
+__Pourquoi cela ne fonctionne pas ?__ : 
+- Proxies Spring : Spring utilise un proxy pour intercepter les appels de méthodes annotées avec `@Transactional`. Cependant, quand la méthode est appelée depuis la même instance (this.addFriend()), le proxy n'est pas activé, donc la transaction ne commence pas et aucun commit/rollback ne se produit.
+- Pas de transaction : L'appel interne contourne la gestion transactionnelle. La méthode addFriend() sera exécutée sans transaction active, et il n'y aura aucun commit ni rollback.
+
+Appel d'une méthode annotée avec @Transactional depuis une méthode externe
+```java
+    @Service
+public class UserService {
+
+    @Transactional
+    public void addFriend() {
+        // Code pour ajouter un ami
+        System.out.println("Ajout d'un ami");
+    }
+}
+
+@Service
+public class AnotherService {
+
+    @Autowired
+    private UserService userService;
+
+    public void doSomethingElse() {
+        // Appel externe, transaction gérée ici
+        userService.addFriend();  // Appel externe, Spring gère la transaction
+    }
+}
+```
+Problème : Cette fois, addFriend() est appelée depuis un autre service (une autre classe) via l'injection de dépendance. Ici, Spring peut intercepter l'appel à addFriend() grâce au proxy et gérer la transaction.
+
+Pourquoi ? : En appelant addFriend() depuis une autre classe (AnotherService), l'appel passe par le proxy Spring qui active la gestion transactionnelle. Une transaction est démarrée avant l'exécution de addFriend() et commitée ou rollbackée à la fin, en fonction des exceptions.
+
+Résultat : La méthode addFriend() sera exécutée dans le cadre d'une transaction active, et un commit/rollback sera effectué en fonction de l'exécution de la méthode.   
+
+
+
 ---
 
 ## 3. **Gestion des Exceptions**
