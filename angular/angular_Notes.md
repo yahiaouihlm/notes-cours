@@ -285,7 +285,55 @@ ou  bien  directement  via le typescritp il faut injecter le `Router` dans le co
 ```
 
 ## HTTP Module
+`HttpClientModule` : est un module fourni par Angular qui permet à l’application de communiquer avec un serveur back-end via le protocole HTTP. Il facilite l’envoi de requêtes HTTP telles que `GET`, ``POST``, `PUT`, `DELETE`, etc.
+Pour utiliser `HttpClientModule`, il faut l'importer dans le module principal (souvent AppModule) :
+```ts
+import { HttpClientModule } from '@angular/common/http';
 
+@NgModule({
+  imports: [
+    HttpClientModule
+  ]
+})
+export class AppModule {}
+```
+```ts
+  // user.service.ts
+  import { Injectable } from '@angular/core';
+  import { HttpClient } from '@angular/common/http';
+  import { Observable } from 'rxjs';
+  import { User } from './user.model';
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UserService {
+    private apiUrl = 'https://api.example.com/users';
+
+    constructor(private http: HttpClient) {}
+
+    // Méthode GET pour récupérer la liste des utilisateurs
+    getUsers(): Observable<User[]> {
+      return this.http.get<User[]>(this.apiUrl);
+    }
+
+    // Méthode POST pour ajouter un nouvel utilisateur
+    addUser(user: User): Observable<User> {
+      return this.http.post<User>(this.apiUrl, user);
+    }
+
+    // Méthode PUT pour modifier un utilisateur
+    updateUser(user: User): Observable<User> {
+      return this.http.put<User>(`${this.apiUrl}/${user.id}`, user);
+    }
+
+    // Méthode DELETE pour supprimer un utilisateur
+    deleteUser(id: number): Observable<void> {
+      return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    }
+  }
+```
+## Observable
 
 
 ## NOTE 📌 Importation en TypeScript vs Importation en Angular :
