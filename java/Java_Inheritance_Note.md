@@ -107,6 +107,70 @@ __NB : Différence entre classes abstraites et interfaces, et leur utilisation__
   En revanche, les _classes abstraites_ servent à décrire un comportement commun dans un contexte bien défini. Elles permettent de factoriser du code et de le faire hériter à toutes les classes qui en dérivent. (Voir la section Classes abstraites pour plus de détails.)
  [Lire la section sur les Classes abstraites](#classes-abstraites).
 
+Une  __`interface`__ peut etendre une ou  plusieurs autre interface 
+``` java 
+    public interface A extends B,C...ect{} //  héritage  multiple 
+``` 
+
+## une class implement deux interface  avec  la meme signature methode
+### 🔹 Cas 1 : Deux interfaces définissent la même méthode abstraite
+```java
+   interface A {
+    void parler();
+   }
+
+    interface B {
+        void parler();
+    }
+
+    class C implements A, B {
+        public void parler() {
+            System.out.println("C parle !");
+        }
+    }
+```
+✅ Pas de conflit ici : la classe C doit juste implémenter la méthode parler(). Java ne se plaint pas car il s'agit de simples contrats.
+
+### 🔸 Cas 2 : Deux interfaces définissent la même méthode avec default
+
+Là, les deux interfaces fournissent une implémentation, et Java ne sait pas laquelle choisir.
+```java 
+      interface A {
+          default void parler() {
+              System.out.println("A parle");
+          }
+      }
+
+      interface B {
+          default void parler() {
+              System.out.println("B parle");
+          }
+      }
+
+      class C implements A, B {
+          // ❗ Java oblige C à résoudre le conflit
+          public void parler() {
+              A.super.parler(); // ou B.super.parler()
+          }
+      }
+```
+✅ Solution :
+Tu dois redéfinir la méthode dans la classe et choisir quelle version appeler (ou en écrire une nouvelle).
+
+❗ Non, les `méthodes static` dans les interfaces ne posent pas de conflit comme les méthodes default, car elles ne sont pas héritées par les classes qui implémentent l’interface.
+
+
+__`⚠️ Règles générales de résolution dans Java :`__
+
+- Si une seule interface fournit une méthode default, elle est utilisée.
+
+- Si deux interfaces fournissent une méthode default, tu dois overrider la méthode.
+
+- Si une classe parente (superclasse) fournit une méthode (même abstract), elle a priorité sur les interfaces.
+
+
+si une classe parente (comme Animal) définit une méthode, alors c'est toujours celle-ci qui est utilisée, même si les interfaces implémentées (Liveable, BreathAble) fournissent aussi une méthode default avec la même signature.la priorité est claire c'est la méthode dans la  class Animal qui  est proiritére aux defaults methode dans les interfaces 
+__Classe > Interface (default) > Interface (abstract)__
 
 
 

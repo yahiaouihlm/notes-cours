@@ -1,5 +1,5 @@
 # La généricité en Java
-7
+
 ## La généricité dans les classes Java
 La généricité en Java est un mécanisme qui permet à une classe de manipuler plusieurs types à la fois. Une classe générique est une classe qui peut fonctionner avec n’importe quel type d'objet, tout en permettant au compilateur de vérifier les types lors de la compilation.
 
@@ -45,6 +45,9 @@ Une méthode générique déclare le ou les types génériques avant le type de 
 public <T> T identite(T valeur) {
     return valeur;
 }
+public <T> List<T> genericMethod(List<T> list) {
+    return list.stream().collect(Collectors.toList());
+} //<= <T> indique a java que Le T dans List<T> est  générique  
 ```
 En Java, pour indiquer que T est un type générique dans une méthode, on doit le spécifier avant le type de retour de la méthode.
 ```java
