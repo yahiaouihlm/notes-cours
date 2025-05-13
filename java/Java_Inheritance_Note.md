@@ -225,3 +225,19 @@ Conversion manuelle d’un type plus grand vers un type plus petit, car cela peu
 si  une `class A` extends une  `class B` 
 
 dans le constructeur de  la class  B le super() devrait etre applé (implicitement  si  y'a pas de paramette ) et explicitement  sinon 
+
+
+## 📌 Les classes non extensibles (final)
+En Java, on peut définir des classes non extensibles grâce au mot-clé `final`. Cela signifie qu’il n’est pas possible d’hériter de cette classe, et donc, on ne peut pas l'étendre dans la hiérarchie des classes.
+```java
+    public final class A {
+        // Corps de la classe
+    }
+
+ ```
+ __❌ Ce qu'on ne peut pas faire :__
+ ```java
+public class B extends A {
+    // Erreur : impossible d’hériter d’une classe final
+}
+```
