@@ -239,6 +239,54 @@ Il peut fonctionner **dans un seul sens** (modèle → vue ou vue → modèle) o
 ```
 ```
 
+## Système de routage Angular 
+Afin de permettre la navigation entre différents types de composants, Angular met à disposition un système de routage grâce au module `RouterModule`.
+
+__`RouterModule`__ :  est un module fourni par Angular qui permet de gérer la navigation entre les différentes vues (composants) d'une application. Une fois importé dans votre module principal (souvent AppModule) ou dans un module de fonctionnalité, il faut définir les routes dans une constante typée Routes.
+```ts
+    const routes: Routes = [
+      { path: 'home', component: HomeComponent },
+      { path: 'about', component: AboutComponent },
+      { path: '', redirectTo: '/home', pathMatch: 'full' },
+      { path: '**', component: NotFoundComponent }
+    ];
+```
+Cela signifie que lorsque le chemin `(path) `est défini sur "home", la page affiche le composant associé, ici `HomeComponent`.
+
+`redirectTo`: L'attribut redirectTo permet de rediriger l'utilisateur vers un composant par défaut lorsque le chemin est vide. Par exemple :
+
+Pour configurer les routes, on utilise la méthode __`RouterModule.forRoot(appRoutes)`__ dans le tableau imports de votre module principal (AppModule) :
+```ts
+    @NgModule({
+      imports: [RouterModule.forRoot(appRoutes)],
+      exports: [RouterModule]
+    })
+    export class AppRoutingModule {}
+```
+
+Pour naviguer entre les routes directement dans le HTML, Angular propose la directive `routerLink` avec la balise `<router-outlet></router-outlet>` afin  d'indiquer  endroit ou le  compsant devrait apparaitre. Voici un exemple :
+
+```html
+<button routerLink="/home" class="btn btn-primary">home </button>
+<!--balise html -->
+<div class="container spacer"> 
+  <router-outlet></router-outlet> 
+   <!-- <= Cette balise indique à Angular l'emplacement dans le template où le composant correspondant à la route active doit être affiché. En d'autres termes, c'est ici que le contenu lié à chaque route sera injecté dynamiquement.
+ -->
+</div>
+```
+ou  bien  directement  via le typescritp il faut injecter le `Router` dans le constructeur ensuite naviger vers la page indiquer
+
+```ts
+  Constructor (private router : Router)
+  goToHome(){
+      this.router.navigate(['home']) // passer à  la page home
+  }
+```
+
+## HTTP Module
+
+
 
 ## NOTE 📌 Importation en TypeScript vs Importation en Angular :
 `En TypeScript`, l'import sert à importer des classes ou des objets pour les utiliser dans ton code. Par exemple, tu vas importer une classe pour l'utiliser dans ton fichier .ts.
