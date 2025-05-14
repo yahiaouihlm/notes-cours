@@ -99,6 +99,9 @@ Une instance  d'un object peut  avoir 3 cas  dans une  session hibernet
         // - L'objet a un id (généré par la BDD)
         // - Il est synchronisé avec la base
         // - Toutes les modifications seront suivies par Hibernate
+        
+        // ------- 
+        List<User> users = session.createQuery("from User", User.class).list();
    ```
 - __`Detached`__ : lorsqu’une Session est fermée, les objets persistents qu’elle gérait deviennent des instances détachées (detached). Cela signifie qu’ils conservent leurs données et leur identifiant, mais ne sont plus liés à une Session active.
 
