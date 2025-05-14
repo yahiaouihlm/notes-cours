@@ -1,5 +1,5 @@
 # <h1 align="center">hibernate </h1>
-Hibernate est un framework Java de mapping objet-relationnel (ORM - Object-Relational Mapping), qui permet de simplifier l'interaction avec une base de données relationnelle en mappant les objets Java aux tables de la base de données.
+Hibernate est un outil Java de mapping objet-relationnel (ORM - Object-Relational Mapping), qui permet de simplifier l'interaction avec une base de données relationnelle en mappant les objets Java aux tables de la base de données.
 
 
 ## Principaux concepts d'Hibernate :
