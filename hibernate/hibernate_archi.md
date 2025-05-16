@@ -217,6 +217,12 @@ __🧩 Exemple de fichier hibernate.cfg.xml__ :
         <!-- Enable Hibernate's automatic session context management -->
         <property name="hibernate.c3p0.idle_test_period">3000</property>
 
+        <!-- ✅ Référencement des classes Java annotées -->
+        <mapping class="com.example.model.User"/>
+        <mapping class="com.example.model.Employee"/>
+        <mapping class="com.example.model.Product"/>
+
+
   </session-factory>
 </hibernate-configuration>
 ```
