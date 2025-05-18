@@ -292,4 +292,29 @@ __`middleware`__ :  c'est  une  couche  logicielle intermédaire qui permet  aux
 
                     ➡️ Avantages : bien plus rapide, surtout pour les sites modernes, et mieux optimisé pour les communications entre services.
 
-    - Asynchrone    
+    - **Asynchrone** (Middlewares oriené Message MOM)
+        - Faire  commnuiquer  les  systèmes  diribués  pa intermédiare  d'un  Broker (RabbitMQ, KAFKA ,...ect)
+
+---
+## Architecture de base des  web Services 
+
+<p align="center">
+    <img src="./soap.png" alt="soap archecture">
+</p>
+
+**Web Service** :  Un objet qui contient des méthodes, sauf que les méthodes de cet objet peuvent être appelées à distance. Étant donné que la communication avec les web services se fait via le protocole `HTTP`, ces web services sont déployés sur un serveur web. 
+Dans les  web services `soap`  java  en  utilise `JaxWS`, une  requete `soap` =>  demander  d'executer une méthode dans un `web service`
+
+dans SOAP (Simple Object Access Protocol), la méthode HTTP POST est principalement utilisée pour envoyer des requêtes.
+Pourquoi POST ?
+Le message SOAP est un document XML qui doit être inclus dans le corps (body) de la requête HTTP.
+
+Le protocole GET ne permet pas de mettre un corps de requête, donc il n’est pas adapté à SOAP.
+
+
+<p align="center">
+    <img src="./request.png" alt="soap request">
+</p>
+
+---
+## Concepts fondamentaux des  web  services  
