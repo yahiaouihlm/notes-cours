@@ -7,6 +7,7 @@
 - __`@Table(name="[table_name]")`__ : précise explicitement le nom de la table dans la base de données à laquelle l'entité doit être liée. Si cette annotation est omise, JPA utilisera par défaut le nom de la classe.
 
 - __`@Id`__: Indique que l’attribut est la clé primaire de l’entité. Obligatoire pour toute entité JPA.
+    - __`@EmbeddedId`__ :  dans le  cas  ou la  clé primaire  est  composite 
 
 - __`@GeneratedValue(strategy = GenerationType.IDENTITY) [(strategy = GenerationType.UUID)]`__ : Spécifie que la clé primaire est générée automatiquement par la base de données (ex : auto-incrément en PostgreSQL/MySQL) depuis hirebenet 6 `UUID` aussi .
 
@@ -48,6 +49,8 @@ C’est une relation qui définit `un lien exclusif entre deux entités`, où ch
 
 Autrement dit, pour chaque objet de la première entité, il existe exactement un objet correspondant dans la seconde entité.
 ```java
+   @Entity
+   @Table(name="user")
    public class User{
       @Column("name")
       private String name;  
@@ -56,7 +59,8 @@ Autrement dit, pour chaque objet de la première entité, il existe exactement u
       @JoinColmn("id", referencedColumnName  = "id") 
       private IpAdress adresse;    
    }
-
+   @Entity
+   @Table(name="adress")
   public class  IpAdress {
     private Long id ;
      @Column("domain")
@@ -68,11 +72,11 @@ Autrement dit, pour chaque objet de la première entité, il existe exactement u
     private User user ;  
   }
 
-  /** //  pseaudo  exmple 
+  /** //  relation  en  base 
    *  CREATE TABLE User {
    *   name Varchar(300),
    *   id_adrress INT;
-   *   REFRENCE user (id) 
+   *   REFRENCE user (id) <--- </clé étrangère>
    * }
    * 
    * CREATE  Table Adrress {
@@ -83,6 +87,54 @@ Autrement dit, pour chaque objet de la première entité, il existe exactement u
    * 
 
 ```
+## One To Many (@OneToMany)
+
+La relation **One To Many** (ou **un à plusieurs**) définit un lien entre une entité et un ensemble d'autres entités.  
+Autrement dit, **une seule entité peut être associée à plusieurs instances d'une autre entité**.
+
+Cette relation est généralement utilisée lorsqu'un objet principal possède une collection d'objets liés.
+```java
+
+   @Entity
+   @Table(name="client")
+   public class Client {
+     @Id
+     private Interger id;
+     private String name ; 
+
+     @OneToMany(mappedBy ="client")
+     List <Order>orders ; 
+   }
+
+   @Entity
+   @Table(name="order")
+   public class Order {
+     @Id
+     private Interger id;
+     private Date date ; 
+
+    @ManyToOne
+    @joinColumn("client_id")
+     Client  client; 
+   }
+    
+
+    /** //  relation  en  base 
+   *  CREATE TABLE Client {
+   *   id  serial
+   *   name Varchar(300),
+   *   
+   *  
+   * }
+   * 
+   * CREATE  Table order {
+   *   id INT, 
+   *    date Date,
+   *   client_id FOREIGN KEY client (id) <-- </clé étrangère>
+   * }
+```
+
+
 
 
 
