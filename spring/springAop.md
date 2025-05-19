@@ -36,3 +36,12 @@ les tisseurs  d'aspects se différencient sur deux points
     <img src="sources/weaver.png" alt="weaver ">
     </p>
 
+ 
+## Concepts  de  base de AOP
+- __`Les points de jonction (JoinPoint):`__ :  les  points  de jonctions sont des points du  programme autour desquels un ou  des  aspects ont été greffées 
+ 
+    <p align="center">
+    <img src="sources/jointpoint.png" alt="joint point Aop">
+    </p>
+
+- __`Les points de coupure :`__ :   un point de coupure désigne un ensembe  de points de jonctions 

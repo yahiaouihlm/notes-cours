@@ -1,4 +1,113 @@
-# Spring 
+# Spring
+
+Spring est un **framework Java** qui permet de développer des applications robustes et maintenables. Il repose principalement sur le principe d'**injection de dépendances** (Dependency Injection), qui consiste à déléguer à Spring la gestion des objets et de leurs relations.
+
+---
+
+## 🔧 L'injection de dépendances avec Spring
+
+L’injection de dépendances permet à un objet de recevoir ses dépendances de l’extérieur, plutôt que de les créer lui-même. Cela favorise la modularité et facilite les tests.
+
+Pour activer l'injection de dépendances avec Spring, trois modules principaux sont nécessaires :
+
+- **Spring Core** : le cœur du framework, qui contient les mécanismes de base de l'inversion de contrôle (IoC).
+- **Spring Context** : permet de gérer un **contexte applicatif** contenant les objets à injecter.
+- **Spring Beans** : fournit les fonctionnalités nécessaires à la déclaration et la gestion des **beans**.
+
+---
+
+## ⚙️ Deux méthodes de configuration dans Spring
+
+Spring propose deux approches principales pour configurer les objets (beans) à injecter :
+
+### 1. Configuration via XML
+
+Dans cette méthode, on déclare les objets dans un fichier XML.
+
+#### Exemple :
+```xml
+<!-- applicationContext.xml dans  le resources de votre  projet -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="engine" class="com.example.Engine" />
+
+    <bean id="car" class="com.example.Car">
+        <property name="engine" ref="engine" />
+    </bean>
+
+</beans>
+```
+**Explication :**
+- Le bean car dépend du bean engine.
+
+- Spring injecte l’objet engine dans l’objet car via la propriété engine.
+
+
+**Lancement :** 
+```java
+    // initilialisation
+    ApplicationContext context = new ClassPathXmlApplicationConext("config.xml")
+    
+    // pour avoir le  Bean 
+    IService service =(IService) context.getBean ("service") //nom dans le fichier xml
+
+```
+
+
+
+
+### 2. **Configuration via annotations**
+C’est la méthode la plus moderne, utilisant les annotations Java pour déclarer et injecter les dépendances.
+```java
+    // Engine.java
+    @Component
+    public class Engine {
+        public String start() {
+            return "Engine started!";
+        }
+    }
+
+    // Car.java
+    @Component
+    public class Car {
+        @Autowired
+        private Engine engine;
+
+        public void drive() {
+            System.out.println(engine.start());
+        }
+    }
+    
+        // AppConfig.java
+    @Configuration
+    @ComponentScan(basePackages = "com.example")
+    public class AppConfig { }
+```
+Explication :
+- **@Component** indique que la classe est un bean géré par Spring.
+
+- **@Autowired** permet l’injection automatique de la dépendance.
+
+- **@ComponentScan** demande à Spring de scanner le package pour détecter les composants.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
 
 ## Spring Configuration 
 
