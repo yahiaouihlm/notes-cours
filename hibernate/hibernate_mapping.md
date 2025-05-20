@@ -283,7 +283,81 @@ public class Course {
     ```   
    - `@JoinColumn(name = "medecin_id")` : définit la colonne de jointure (clé étrangère) dans la table consultation.      
 
+## Fetch des Données dans une Relation de Mapping
 
+Dans une relation de mapping entre entités (par exemple en JPA/Hibernate), il existe deux façons principales de charger les données associées : **Fetch Lazy** et **Fetch Eager**.
+
+### 🔄 Fetch Lazy
+
+- Le chargement est **paresseux** : les données de l'entité jointe **ne sont pas récupérées immédiatement** lors de la première requête.
+- Elles ne sont chargées **que lorsqu’on y accède explicitement** dans le code, ce qui déclenche une seconde requête SQL.
+- Cela permet d'**éviter le chargement inutile de données**, surtout dans le cas de relations volumineuses.
+
+> Exemple :  
+> Une entité `Article` avec une relation `@OneToMany` vers `Commentaire`.  
+> Si la relation est en `FetchType.LAZY`, les commentaires ne seront chargés que lorsque tu accèderas à `article.getCommentaires()`.
+
+### ⚡ Fetch Eager
+
+- Le chargement est **immédiat** : les données de l'entité jointe sont **automatiquement récupérées** en même temps que l'entité principale.
+- Cela signifie qu'**une seule requête** avec jointure est souvent utilisée pour tout charger.
+- Utile quand les données associées sont **toujours nécessaires**.
+
+> Exemple :  
+> Une entité `Utilisateur` avec un profil (`@OneToOne`) en `FetchType.EAGER` : le profil est automatiquement chargé dès qu’on récupère l’utilisateur.
+
+---
+
+### 💡 Bonnes pratiques
+
+- Utiliser **`FetchType.LAZY` par défaut** pour éviter de charger trop de données inutilement.
+- Utiliser **`FetchType.EAGER`** uniquement si les données liées sont **systématiquement nécessaires**.
+
+---
+
+
+
+## Cascade dans une Relation de Mapping
+
+Le mot-clé `cascade` en JPA permet de propager automatiquement certaines opérations (comme `persist`, `merge`, `remove`, etc.) d’une entité **parent** vers ses entités **associées**.
+
+Cela évite d’avoir à gérer manuellement les opérations sur les entités enfants lorsqu'on manipule l’entité principale.
+
+### 🔧 Principaux types de cascade
+
+Voici les principales options de cascade que tu peux utiliser avec l’annotation `@OneToOne`, `@OneToMany`, `@ManyToOne` ou `@ManyToMany`.
+
+#### 🔹 `CascadeType.PERSIST`
+- Lorsque tu fais `entityManager.persist(parent)`, les entités associées (enfant) sont également persistées automatiquement.
+
+#### 🔹 `CascadeType.MERGE`
+- Lorsque tu fais `entityManager.merge(parent)`, les entités associées sont également mises à jour.
+
+#### 🔹 `CascadeType.REMOVE`
+- Lorsque tu fais `entityManager.remove(parent)`, les entités associées sont **aussi supprimées**.
+
+#### 🔹 `CascadeType.REFRESH`
+- Rafraîchit les entités associées depuis la base de données.
+
+#### 🔹 `CascadeType.DETACH`
+- Détache aussi les entités associées du contexte de persistance.
+
+#### 🔹 `CascadeType.ALL`
+- Applique **tous** les types de cascade mentionnés ci-dessus.
+
+---
+
+### 📌 Exemple
+
+```java
+@Entity
+public class Commande {
+    
+    @OneToMany(mappedBy = "commande", cascade = CascadeType.ALL)
+    private List<LigneCommande> lignes;
+
+    // ...
+}
 
 
 
