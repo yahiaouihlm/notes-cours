@@ -45,6 +45,12 @@ Ces relations peuvent avoir différentes cardinalités (nombre d’éléments li
 De plus, une association peut être `unidirectionnelle`, où une seule entité connaît la relation, ou `bidirectionnelle`, où les deux entités sont conscientes l’une de l’autre et peuvent naviguer dans les deux sens.
 
 ## One To One (@OneToOne) 
+
+<p align="center">
+    <img src="./oneToOne.png" alt="one to one mapping">
+</p>
+
+
 C’est une relation qui définit `un lien exclusif entre deux entités`, où chaque instance de la première entité est associée à __`une seule instance de`__ la seconde entité, et __`inversement`__.
 
 Autrement dit, pour chaque objet de la première entité, il existe exactement un objet correspondant dans la seconde entité.
@@ -87,12 +93,27 @@ Autrement dit, pour chaque objet de la première entité, il existe exactement u
    * 
 
 ```
-## One To Many (@OneToMany)
+## One To Many (@OneToMany) 
 
 La relation **One To Many** (ou **un à plusieurs**) définit un lien entre une entité et un ensemble d'autres entités.  
 Autrement dit, **une seule entité peut être associée à plusieurs instances d'une autre entité**.
 
 Cette relation est généralement utilisée lorsqu'un objet principal possède une collection d'objets liés.
+
+## Many To One (@ManyToOne)
+La relation **Many To One** (ou **plusieurs vers un**) définit un lien où **plusieurs entités peuvent être associées à une seule instance d'une autre entité**.
+
+<p align="center">
+    <img src="./One-to-Many-Mapping.png" alt="one to Many mapping">
+</p>
+
+
+
+Autrement dit, **de nombreuses instances d'une entité sont rattachées à une seule instance d'une autre entité**.
+
+C'est souvent le **côté propriétaire** de la relation inverse `@OneToMany`.
+
+
 ```java
 
    @Entity
@@ -139,11 +160,73 @@ Cette relation est généralement utilisée lorsqu'un objet principal possède u
 
 
 ---
-- __`@manyToOne`__ Définit une relation plusieurs-à-un entre cette entité et une autre (ex : plusieurs patients peuvent avoir le même médecin).
 
--  __`@JoinColumn(name = "[nom_colonne]")`__: Utilisé avec une relation `(@ManyToOne, etc.)`, pour indiquer la colonne de jointure dans la table.
+## 🔁 Relation `@ManyToMany`
 
-exemple : __`@manyToOne`__ et __`OneToMany`__
+La relation **Many To Many** (ou **plusieurs à plusieurs**) relie deux entités où **chaque instance de l’une peut être liée à plusieurs instances de l’autre**, et vice versa.
+
+Par exemple, un **étudiant** peut suivre **plusieurs cours**, et un **cours** peut être suivi par **plusieurs étudiants**.
+
+Pour modéliser une relation `@ManyToMany`, il faut généralement utiliser une **table de jointure** entre les deux entités.  
+JPA permet de définir cette relation avec l’annotation `@ManyToMany` et éventuellement `@JoinTable` pour personnaliser la table intermédiaire.
+
+<p align="center">
+    <img src="./manyToMany.png" alt="one to Many mapping">
+</p>
+
+
+---
+
+### 🧱 Exemple concret : `Student` et `Course`
+
+#### Entité `Student.java`
+
+```java
+@Entity
+public class Student {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+
+    @ManyToMany
+    @JoinTable(
+        name = "student_course",
+        joinColumns = @JoinColumn(name = "student_id"),
+        inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<Course> courses;
+
+    // getters, setters
+}
+```
+Entité Course.java
+```java
+@Entity
+public class Course {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String title;
+
+    @ManyToMany(mappedBy = "courses")
+    private List<Student> students;
+
+    // getters, setters
+}
+```
+
+
+---
+
+### ✅ Représentation dans JPA
+
+
+
 ```sql
         -- Table des médecins
                 CREATE TABLE IF NOT EXISTS medecin (
@@ -199,6 +282,10 @@ exemple : __`@manyToOne`__ et __`OneToMany`__
             }
     ```   
    - `@JoinColumn(name = "medecin_id")` : définit la colonne de jointure (clé étrangère) dans la table consultation.      
+
+
+
+
 
 ---
 ### mapping  types  SQL-Hibrenet 
