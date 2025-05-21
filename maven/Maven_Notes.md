@@ -85,3 +85,69 @@ Pour utiliser correctement les commandes `maven`, il faut se placer dans la raci
 - ✅`mvn dependency:build-classpath`:afficher toues l'emplacement  de toutes les  dependences .jar  utilisé 
 
 - ✅`D<nom_de_la_propriété>=<valeur_à passer>` :L’option -D dans Maven sert à passer un paramètre système (une propriété) à l'exécution de la commande. Elle a cette forme : exp `mvn test -Dtest=*ServiceTest` executer  tous les  test  qui  termine  par ServiceTest
+
+- `mvn clean dependency:copy-dependencies package` une commande combinée qui exécute plusieurs étapes successives dans un projet Maven afin de nettoyer, préparer et construire le projet.
+
+## mvn  dependency:< option >
+# Commandes Maven Dependency Plugin
+
+Le plugin **Maven Dependency Plugin** propose plusieurs objectifs (`goals`) pour gérer les dépendances d’un projet Maven.
+
+---
+
+## 1. `dependency:analyze`
+- **Description** : Analyse les dépendances du projet pour détecter celles utilisées mais non déclarées et celles déclarées mais non utilisées.
+- **Utilisation** : `mvn dependency:analyze`
+
+## 2. `dependency:analyze-dep-mgt`
+- **Description** : Analyse la section `dependencyManagement` pour détecter les incohérences dans la gestion des versions des dépendances.
+- **Utilisation** : `mvn dependency:analyze-dep-mgt`
+
+## 3. `dependency:analyze-exclusions`
+- **Description** : Vérifie si les exclusions de dépendances sont bien nécessaires.
+- **Utilisation** : `mvn dependency:analyze-exclusions`
+
+## 4. `dependency:copy`
+- **Description** : Copie une ou plusieurs dépendances spécifiques vers un dossier donné.
+- **Utilisation** : `mvn dependency:copy -Dartifact=groupId:artifactId:version -DoutputDirectory=chemin`
+
+## 5. `dependency:copy-dependencies`
+- **Description** : Copie toutes les dépendances du projet dans un dossier spécifique (par défaut `target/dependency`).
+- **Utilisation** : `mvn dependency:copy-dependencies -DoutputDirectory=target/dependency`
+
+## 6. `dependency:copy-resources`
+- **Description** : Copie les ressources associées aux dépendances (ex : sources, javadoc) vers un dossier.
+- **Utilisation** : `mvn dependency:copy-resources`
+
+## 7. `dependency:go-offline`
+- **Description** : Télécharge toutes les dépendances nécessaires pour pouvoir travailler hors ligne.
+- **Utilisation** : `mvn dependency:go-offline`
+
+## 8. `dependency:resolve`
+- **Description** : Résout les dépendances du projet et affiche celles qui seront utilisées.
+- **Utilisation** : `mvn dependency:resolve`
+
+## 9. `dependency:resolve-plugins`
+- **Description** : Résout les plugins Maven utilisés dans le projet.
+- **Utilisation** : `mvn dependency:resolve-plugins`
+
+## 10. `dependency:tree`
+- **Description** : Affiche l’arbre des dépendances, utile pour visualiser les relations entre dépendances.
+- **Utilisation** : `mvn dependency:tree`
+
+---
+
+## Options communes
+
+- `-DoutputDirectory=chemin` : Spécifie le dossier où copier les fichiers.
+- `-DincludeScope=scope` : Inclut uniquement les dépendances d’un scope donné (`compile`, `runtime`, `test`…).
+- `-DexcludeScope=scope` : Exclut les dépendances d’un scope donné.
+- `-Dclassifier=type` : Inclut les dépendances avec un classificateur spécifique (`sources`, `javadoc`…).
+- `-DoverWriteIfNewer=true|false` : Permet d’écraser uniquement si la version est plus récente.
+
+---
+
+## Documentation officielle
+
+Pour plus de détails, consultez la documentation officielle :  
+[https://maven.apache.org/plugins/maven-dependency-plugin/](https://maven.apache.org/plugins/maven-dependency-plugin/)
