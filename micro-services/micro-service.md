@@ -24,7 +24,7 @@ Pour que tous ces microservices fonctionnent ensemble, sous l’architecture d�
 
 ---
 
-## 🔀 Gateway (API Gateway)
+## 1. 🔀 Gateway (API Gateway)
 
 La **Gateway** est un composant technique qui agit comme **point d’entrée unique** pour toutes les requêtes externes (clients, navigateurs, applications mobiles…).
 
@@ -38,7 +38,7 @@ Elle se charge de :
 
 ---
 
-## 📘 Discovery Service (Service Registry)
+## 2. 📘 Discovery Service (Service Registry)
 
 Le **Discovery Service** est un **annuaire dynamique** dans lequel chaque microservice **s'enregistre automatiquement** avec son nom et son adresse IP ou URL.
 
@@ -59,6 +59,24 @@ Il permet :
 | Load Balancing    | Spring Cloud LoadBalancer |
 
 ---
+### 📌 Config Service
 
-### 📌 Exemple d’architecture minimaliste
+Le **Config Service** est un microservice centralisé chargé de **gérer les fichiers de configuration** de l'ensemble des microservices d'une application.
+
+Il permet de :
+- Centraliser toutes les configurations dans un seul endroit (par exemple : un dépôt Git)
+- Appliquer des configurations **dynamiquement**, sans redémarrer les microservices
+- Faciliter la gestion des environnements (dev, test, prod)
+- Maintenir la cohérence des paramètres sensibles ou partagés (comme les URL, clés API, ports, etc.)
+
+> Grâce au **refresh dynamique** (via Spring Cloud Config + Actuator), un microservice peut recharger sa configuration **à chaud**, sans être redémarré.
+
+
+---
+
+## load balancing micro-service
+
+<p align="center">
+    <img src="./architecture.png" alt="micro-service">
+</p>
 
