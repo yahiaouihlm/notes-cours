@@ -5,7 +5,7 @@ Un web service est une interface qui permet à une application A de communiquer 
 Il existe deux modèles de communication entre applications :
 
 <p align="center">
-    <img src="./destributedSystem.png" alt="distributed system archetec">
+    <img src="sources/destributedSystem.png" alt="distributed system archetec">
 </p>
 
 
@@ -299,7 +299,7 @@ __`middleware`__ :  c'est  une  couche  logicielle intermédaire qui permet  aux
 ## Architecture de base des  web Services 
 
 <p align="center">
-    <img src="./soap.png" alt="soap archecture">
+    <img src="sources/soap.png" alt="soap archecture">
 </p>
 
 **Web Service** :  Un objet qui contient des méthodes, sauf que les méthodes de cet objet peuvent être appelées à distance. Étant donné que la communication avec les web services se fait via le protocole `HTTP`, ces web services sont déployés sur un serveur web. 
@@ -313,8 +313,65 @@ Le protocole GET ne permet pas de mettre un corps de requête, donc il n’est p
 
 
 <p align="center">
-    <img src="./request.png" alt="soap request">
+    <img src="sources/request.png" alt="soap request">
 </p>
 
 ---
-## Concepts fondamentaux des  web  services  
+## Concepts fondamentaux des Web Services
+
+- **SOAP (Simple Object Access Protocol)** :  
+  SOAP est un protocole d’échange entre applications, indépendant de toute plateforme et basé sur le langage **XML**.  
+  Un appel de service SOAP est un flux ASCII structuré sous forme de balises XML, généralement transporté via le protocole **HTTP** (mais peut aussi utiliser SMTP, etc.).
+
+- **WSDL (Web Services Description Language)** :  
+  WSDL est un document au format XML qui décrit un Web Service SOAP.  
+  Il spécifie :
+  - les **méthodes** disponibles,
+  - leurs **signatures** (types d’entrées/sorties),
+  - les **points d’accès** (URL, port, etc.).  
+  
+  On peut considérer le WSDL comme l’équivalent du **IDL (Interface Definition Language)** utilisé en **CORBA** pour la programmation distribuée.
+
+### Formats de description selon le type de service :
+| Type de Service | Format de Description |
+|------------------|------------------------|
+| SOAP             | WSDL                  |
+| REST             | Swagger / OpenAPI     |
+| GraphQL          | GraphQL Schema        |
+| CORBA            | IDL                   |
+
+- **UDDI (Universal Description, Discovery and Integration)** :  
+  UDDI est une norme pour la mise en place d’un **annuaire distribué de Web Services**.  
+  Il permet :
+  - la **publication** de services,
+  - leur **découverte** (recherche de services disponibles).  
+  
+  UDDI lui-même est exposé comme un **Web Service**, et ses méthodes sont invoquées via le protocole **SOAP**.
+
+
+
+---
+## Différence entre API et Web Services
+
+Un **Web Service** peut être considéré comme une **API** lorsqu’il est accompagné d’une **interface d’utilisation**, c’est-à-dire une documentation qui décrit comment l’utiliser.
+
+Par exemple :
+
+- Un **Web Service SOAP** devient une API lorsqu’il est fourni avec un fichier **WSDL** (Web Services Description Language), qui décrit les opérations disponibles, les types de données, les points d’accès, etc. On parle alors d'une **API SOAP** ou **API Web**.
+
+- Un **Web Service REST** devient également une API complète lorsqu’il est documenté à l’aide d’un outil comme **Swagger** (ou OpenAPI). On parle alors d’une **API RESTful** ou **API Web REST**.
+
+---
+
+### En résumé :
+
+| Terme | Définition | Requiert une documentation ? | Exemple de documentation |
+|-------|------------|-------------------------------|---------------------------|
+| Web Service | Service accessible via le réseau (souvent HTTP) | ❌ Non obligatoire | - |
+| API (Interface de Programmation d’Application) | Interface exposée pour interagir avec un service ou logiciel | ✅ Oui | WSDL, Swagger/OpenAPI |
+| API Web | API exposée via le Web (souvent REST ou SOAP) | ✅ Oui | WSDL, Swagger |
+
+> ✅ Un **Web Service + documentation d’utilisation** devient une **API Web**.
+
+
+
