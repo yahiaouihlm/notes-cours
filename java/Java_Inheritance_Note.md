@@ -241,3 +241,24 @@ public class B extends A {
     // Erreur : impossible d’hériter d’une classe final
 }
 ```
+
+
+# `sealed interface` en Java
+
+Depuis Java 17, Java permet de déclarer des interfaces ou classes comme **scellées** grâce au mot-clé `sealed`. Cela permet de **restreindre** quelles classes peuvent hériter ou implémenter une interface.
+
+---
+
+## 🔹 Qu’est-ce qu’une interface `sealed` ?
+
+Une **interface sealed** est une interface **fermée** à l'héritage libre. Seules les classes listées avec le mot-clé `permits` peuvent l’implémenter.
+
+---
+
+## 🔸 Exemple de déclaration
+
+```java
+public sealed interface Seller permits IndividualSeller, CompanySeller {
+    String getName();
+    void sell();
+}
