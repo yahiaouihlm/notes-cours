@@ -12,8 +12,9 @@ Pour que tous ces services puissent fonctionner ensemble, sous le toit d’une s
 ---
 
 <p align="center">
-    <img src="./micro-service-archi.png" alt="micro-service">
+    <img src="sources/micro-service-archi.png" alt="micro-service">
 </p>
+
 
 # <h1 align="center">Microservices</h1>
 
@@ -77,6 +78,93 @@ Il permet de :
 ## load balancing micro-service
 
 <p align="center">
-    <img src="./architecture.png" alt="micro-service">
+    <img src="sources/architecture.png" alt="micro-service">
 </p>
 
+
+
+
+## <h2 align="center"> outils  pour mettre  en  place architecture  micro-services </h2>
+
+## 🚀 Spring Boot Actuator
+
+**Spring Boot Actuator** est un module de Spring Boot qui fournit des **endpoints prêts à l’emploi** pour surveiller, diagnostiquer et gérer ton application, que ce soit en développement ou en production.
+
+---
+
+## 🛠️ Fonctionnalités principales
+
+| Fonction           | Endpoint                 | Description                                               |
+|--------------------|--------------------------|-----------------------------------------------------------|
+| 🔍 État            | `/actuator/health`       | Vérifie si l'application est en bonne santé              |
+| 📈 Infos système   | `/actuator/info`         | Affiche des infos personnalisées (version, auteur…)      |
+| 📊 Statistiques    | `/actuator/metrics`      | Montre les métriques système et applicatives             |
+| 📂 Mappings        | `/actuator/mappings`     | Liste tous les endpoints de ton app                      |
+| 📋 Configurations  | `/actuator/env` etc.     | Affiche les variables d’environnement et props Spring    |
+| 🚨 Logs            | `/actuator/loggers`      | Change dynamiquement le niveau de log                    |
+| 🔁 Beans           | `/actuator/beans`        | Liste les beans créés par le conteneur Spring            |
+
+---
+
+## ⚙️ Activation
+
+### 1. Ajouter la dépendance Maven
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
+```
+
+### 2. Configuration de base (`application.properties`)
+
+```properties
+## exposer tous  les endpoints comme /health ,  /beans ...ect 
+management.endpoints.web.exposure.include=* 
+management.endpoint.health.show-details=always
+```
+
+> Tu peux limiter les endpoints exposés selon tes besoins.
+
+---
+
+## 🔒 Sécurité
+
+- Certains endpoints sensibles (ex: `/shutdown`) sont désactivés par défaut.
+- Utilise **Spring Security** pour restreindre l’accès aux endpoints.
+
+---
+
+## ✅ Exemple d'appel
+
+```bash
+curl http://localhost:8080/actuator/health
+```
+
+Réponse attendue :
+
+```json
+{
+  "status": "UP"
+}
+```
+
+---
+
+## 🧠 Pourquoi utiliser Spring Boot Actuator ?
+
+- ✅ Monitoring sans ajouter de code métier
+- ✅ Intégration facile avec Prometheus, Grafana, etc.
+- ✅ Analyse rapide en cas de problème
+- ✅ Gestion à chaud (logs, métriques, beans…)
+
+---
+
+## 📌 Résumé
+
+| Avantage         | Ce que tu gagnes |
+|------------------|------------------|
+| Visibilité       | Voir ce qui se passe en interne |
+| Maintenance      | Interventions plus rapides     |
+| Intégration      | Prêt pour l’observabilité moderne |
