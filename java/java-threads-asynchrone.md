@@ -144,13 +144,77 @@ et il faudra un nouvel appel à `interrupt()` pour le repositionner à `true`.
 
 ---
 
+## 🧵 Attente d’un Thread grâce à join()
+`thread.join`  permet de bloquer le thread appelant jusqu'à ce que le thread ciblé ait terminé son exécution.
+C'est un mécanisme très utile en programmation multithread pour synchroniser l'exécution et éviter que le programme principal ne se termine avant les threads secondaire
+```java 
+    Thread t = new Thread(() -> {
+        System.out.println("Thread en cours...");
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {}
+        System.out.println("Thread terminé !");
+    });
+
+    t.start();
+
+    try {
+        t.join(); // attend que 't' se termine
+    } catch (InterruptedException e) {}
+
+    System.out.println("Main continue après la fin du thread.");
+```
 
 
+<h2 align="center">Concurrence et Partage de Données</h2>
+Dans un programme multithreadé, les accès aux valeurs partagées (lecture/écriture) peuvent entraîner des comportements inattendus, notamment à cause d’opérations non atomiques comme value++ ou des instructions conditionnelles (if (...) { ... }).
 
+Bien que ces instructions semblent simples en Java, elles sont en réalité composées de plusieurs instructions en assembleur, ce qui ouvre la porte à des entrelacements (interleavings) entre threads.
 
+Autrement dit, pendant qu’un thread effectue une opération sur une donnée partagée (comme une copie en cache de la variable), un autre thread peut modifier cette même donnée. Cela peut provoquer une incohérence, car les modifications ne sont pas visibles entre les threads si elles ne sont pas correctement synchronisées.
 
+## 🛠️ Solution avec synchronized
+  Pour résoudre ce problème, Java propose le mot-clé synchronized, qui peut être appliqué sur une méthode ou un bloc de code, afin de :
 
+  - Garantir un accès exclusif à la ressource partagée par un seul thread à la fois.
 
+  - Assurer que les écritures sont visibles aux autres threads (effet mémoire).
+
+  Cela permet de protéger les sections critiques du code et de garantir une exécution cohérente.
+
+```java
+public class Compteur {
+    private int valeur = 0;
+
+    public synchronized void incrementer() {
+        valeur++;
+    }
+
+    public synchronized int getValeur() {
+        return valeur;
+    }
+}
+```
+
+## Bloc de Synchronisation en Java
+
+En plus de synchroniser **toute une méthode** avec le mot-clé `synchronized`, Java permet de **synchroniser uniquement une portion spécifique du code**, appelée **bloc de synchronisation**.
+
+Cette approche est utile lorsque **seule une partie du code accède à une ressource partagée**, ce qui permet de :
+
+- **Limiter la zone critique** pour de meilleures performances.
+- **Réduire les blocages** entre threads.
+- Garder **plus de contrôle** sur ce qui est synchronisé.
+
+---
+
+### 🔧 Syntaxe
+
+```java
+synchronized (objetVerrou) {
+    // section critique : accès à la ressource partagée
+}
+```
 
 
 
