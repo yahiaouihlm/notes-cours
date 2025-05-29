@@ -37,11 +37,76 @@ les tisseurs  d'aspects se différencient sur deux points
     </p>
 
  
-## Concepts  de  base de AOP
-- __`Les points de jonction (JoinPoint):`__ :  les  points  de jonctions sont des points du  programme autour desquels un ou  des  aspects ont été greffées 
+## <h2 align="center"> Concepts  de  base de AOP </h2>
+- ## __`1. Les points de jonction (JoinPoint):`__ :  
+les  points  de jonctions sont des points du  programme autour desquels un ou  des  aspects ont été greffées 
  
-    <p align="center">
+  <p align="center">
     <img src="sources/jointpoint.png" alt="joint point Aop">
-    </p>
+  </p>
 
-- __`Les points de coupure :`__ :   un point de coupure désigne un ensembe  de points de jonctions 
+- ## __`2. Les points de coupure (): PointCut`__ :
+   un point de coupure désigne un ensembe  de points de jonctions   
+  <p align="center">
+    <img src="sources/pointcut.png" alt="joint point Aop">
+    </p>
+## Types de Pointcuts (PointCut) en AOP
+
+  En AOP, les pointcuts ciblent des points spécifiques dans l'exécution du programme. Voici les principaux types :
+
+  - **execution()**  
+    Cible l'exécution d'une méthode (dans le corps de la méthode).  
+    *Supporté par Spring AOP.*
+
+  - **call()**  
+    Cible l'appel d'une méthode (l'endroit où la méthode est appelée).  
+    *Non supporté par Spring AOP, uniquement AspectJ.*
+
+  - **get() / set()**  
+    Cible l'accès ou la modification d'un champ (attribut).
+
+  - **handler()**  
+    Cible un bloc `catch` lors de la gestion d'une exception.
+
+  - **initialization() / preinitialization()**  
+    Cible la création d'un objet, pendant (initialization) ou juste avant (preinitialization) l’exécution du constructeur.
+
+  - **staticinitialization()**  
+    Cible les blocs statiques d'initialisation d’une classe.
+
+  ---
+
+  ### Différence entre execution() et call()
+
+  | Pointcut    | Description                      | Support Spring AOP |
+  |-------------|---------------------------------|--------------------|
+  | execution() | Exécution de la méthode          | Oui                |
+  | call()      | Appel de la méthode              | Non                |
+
+
+- ## __`3. Wildcard` :__ 
+Dans un langage de programmation orienté aspect, il est essentiel de fournir au développeur une structure syntaxique permettant de déclarer des points de coupure (pointcuts).
+  - Chaque langage définit sa propre syntaxe pour exprimer ces points de coupure.
+  - Les **wildcards** (caractères génériques) permettent de cibler plusieurs méthodes, classes ou signatures à la fois.
+  - Elles peuvent être comparées aux expressions régulières, dans le sens où elles permettent de caractériser de manière flexible des portions du programme à intercepter.
+
+Exemple  :
+```java
+  call (* *..Point.get*(..))
+  // * : le  type  de retoure
+  // *.: n'import quel package
+  // get*() : toutes  les  méthodes qui terminent  par get() 
+```
+
+- ## __`4. Les Codes Advices`__
+
+Les blocs **Advices** sont des blocs de code qui exécutent un aspect.  
+Les codes Advices caractérisent le comportement de l'aspect.  
+
+Chaque code Advice d'un aspect doit être associé à une coupe (pointcut) pour être exécuté.  
+Ils ne seront exécutés que si un événement défini par un point de coupure a été intercepté.  
+
+Un code Advice peut être exécuté selon trois modes :  
+- **avant** (before)  
+- **après** (after)  
+- **autour** (around) d'un point de jonction (join point).

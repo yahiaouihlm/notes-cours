@@ -387,6 +387,10 @@ __Angular (exports: [CompA])__ : Pour exporter des composants dans des templates
 ## commandes  Angular
 
 - __`ng new FirstApp`__ : cette commande permet de générer un projet Angular de base avec tous les fichiers essentiels déjà configurés (structure du projet, dépendances, configuration TypeScript, environnement, etc.). C’est le point de départ idéal pour commencer une nouvelle application Angular.
+  - `--no-standalone` : 
+    Démarrer un projet Angular avec des modules, sans utiliser le concept de standalone components.
+
+
 
 - __`ng serve`__ : cette commande démarre un serveur de développement local et ouvre automatiquement l’application Angular dans le navigateur. Elle compile le projet, surveille les modifications en temps réel, et rafraîchit la page automatiquement à chaque changement.
 En arrière-plan, `Angular CLI` utilise `Webpack`, un outil de bundling, pour rassembler tous les fichiers `JavaScript` en un seul fichier optimisé, et fait de même pour les fichiers `HTML`, CSS et autres ressources. Cela permet de charger l’application plus efficacement dans le navigateur.

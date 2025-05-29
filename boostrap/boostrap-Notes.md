@@ -23,6 +23,17 @@ Bootstrap divise l’écran horizontalement en 12 parties égales, appelées col
         | `container-xl`  | 100% jusqu’à `1200px`, puis largeur fixe |
         | `container-xxl` | 100% jusqu’à `1400px`, puis largeur fixe |
 
+- `container-xl` : Le conteneur aura une largeur fluide (100%) jusqu’au breakpoint xl (≥1200px), puis une largeur fixe à partir de là.
+
+  📦 **Maintenant, dans Bootstrap :**
+
+    | Classe Bootstrap   | Largeur maximale               | Comportement                      |
+    | ------------------ | ------------------------------ | --------------------------------- |
+    | `.container`       | **fixe** selon le *breakpoint* | centrée, avec marges automatiques |
+    | `.container-fluid` | **toujours 100%**              | remplit tout l’écran              |
+
+---
+
 - `row` : sert à organiser horizontalement les colonnes (.col-*) à l’intérieur d’un conteneur (.container, .container-fluid, etc.), Créer une ligne pour accueillir les colonnes (.col) et gérer correctement leur alignement et espacement, Elle utilise `display: flex` pour aligner les colonnes sur une ligne horizontale.**On définit plusieurs .row dans un .container quand on veut créer plusieurs lignes distinctes, chacune avec son propre agencement de colonnes**
 
 - `col` :  est une colonne dans le système de grille Bootstrap. Elle représente une portion de la largeur disponible sur une ligne (.row).
@@ -188,3 +199,15 @@ Blocs visuels pour afficher contenu structuré.
   </div>
 </div>
 ```
+
+
+##  types  d'ecrans  
+
+| Nom             | Préfixe (classes) | Largeur min. | Exemple d’appareil     |
+| --------------- | ----------------- | ------------ | ---------------------- |
+| **Extra small** | (aucun préfixe)   | `0px`        | Téléphones très petits |
+| **Small**       | `sm`              | `576px`      | Téléphones (portrait)  |
+| **Medium**      | `md`              | `768px`      | Tablettes              |
+| **Large**       | `lg`              | `992px`      | Ordinateurs portables  |
+| **Extra large** | `xl`              | `1200px`     | Ordinateurs de bureau  |
+| **XXL**         | `xxl`             | `1400px`     | Très grands écrans     |
