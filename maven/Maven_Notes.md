@@ -16,6 +16,10 @@
    ```bash
    mvn archetype:generate "-DgroupId=fr.sqli.testapp" "-DartifactId=testapp" "-DarchetypeArtifactId=maven-archetype-quickstart" "-DarchetypeVersion=1.5" "-DinteractiveMode=false"
    ```
+   **pareil pour  la  commande de lancement :**
+   ```bash
+      mvn compile exec:java "-Dexec.mainClass=org.halim.aop.App"
+   ```
 
 
 
