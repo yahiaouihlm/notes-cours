@@ -10,10 +10,11 @@ La __AOP__ permet de développer ces préoccupations séparément, puis de les r
 ## POO VS POO + AOP
 
 <p align="center">
-  <img src="sources/poovsaspect.png" alt="pooANDaop ">
+  <img src="images/poovsaspect.png" alt="pooANDaop ">
 </p>
+
 <p align="center">
-  <img src="sources/aop.png" alt="pooANDaop ">
+  <img src="images/aop.png" alt="pooANDaop ">
 </p>
 
 
@@ -33,7 +34,7 @@ les tisseurs  d'aspects se différencient sur deux points
 - le moment ou  le tissage est réalisé  (compilation , Excuction)
 
     <p align="center">
-    <img src="../sources/weaver.png" alt="weaver ">
+    <img src="images/weaver.png" alt="weaver ">
     </p>
 
  
@@ -42,13 +43,13 @@ les tisseurs  d'aspects se différencient sur deux points
 les  points  de jonctions sont des points du  programme autour desquels un ou  des  aspects ont été greffées 
  
   <p align="center">
-    <img src="../sources/jointpoint.png" alt="joint point Aop">
+    <img src="images/jointpoint.png" alt="joint point Aop">
   </p>
 
 - ## __`2. Les points de coupure (): PointCut`__ :
    un point de coupure désigne un ensembe  de points de jonctions   
   <p align="center">
-    <img src="../sources/pointcut.png" alt="joint point Aop">
+    <img src="images/pointcut.png" alt="joint point Aop">
     </p>
 ## Types de Pointcuts (PointCut) en AOP
 
@@ -152,7 +153,23 @@ On peut le définir soit par une syntaxe de class, soit par une syntaxe `annotat
     
     ```
 1. __Syntaxe de annotations avec des  class  java__ 
+    ```java
+      @Aspect
+      public class SecondAspect {
 
+          // Pointcut ciblant toute méthode main() dans un package org.*
+          @Pointcut("execution(* org.*.main(..))")
+          public void pc1() {}
+
+          // Advice avant l'exécution des méthodes ciblées par pc1
+          @Before("pc1()")
+          public void applyBeforeMain() {
+              System.out.println("---------------------------------------------");
+              System.out.println("Before main from AspectJ syntax from SecondAspect class");
+              System.out.println("---------------------------------------------");
+          }
+      }
+    ```
 
 
 
