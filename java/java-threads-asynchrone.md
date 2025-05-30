@@ -216,6 +216,10 @@ synchronized (objetVerrou) {
 }
 ```
 
+L’objet utilisé comme verrou (ou "lock") peut être this, une variable dédiée, ou n’importe quel objet non nul. Un seul thread peut entrer dans le bloc synchronisé sur un même verrou à un instant donné.
+
+
+
 
 
 
