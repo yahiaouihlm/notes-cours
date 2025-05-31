@@ -168,6 +168,27 @@ On peut le définir soit par une syntaxe de class, soit par une syntaxe `annotat
               System.out.println("Before main from AspectJ syntax from SecondAspect class");
               System.out.println("---------------------------------------------");
           }
+
+          @Around("pc1()")
+          public void  aroundMain  (ProceedingJoinPoint proceedingJoinPoint) throws Exception{
+          System.out.println("---------------------------------------------");
+           System.out.println("Aroun main from AspectJ syntax  from FirstAspect.aj  file ");
+          
+          proceedingJoinPoint.proceed();
+          System.out.println("---------------------------------------------");
+        
+         }
+
+          @Before("execution(* service.OrderService.*(..))")
+          public void logBefore(JoinPoint joinPoint) {
+                System.out.println("Appel de : " + joinPoint.getSignature());
+            }
+
+          @Before ("pc2() && args(code , montant)")
+            public void checkArguement(Long code , double montant) {  // controller  les (obtenir les arguments utilisé  par la methode)
+                System.out.println(" La valeur  du code est "+ code  +"montant :"  +montant);
+
+            }
       }
     ```
 
@@ -207,4 +228,28 @@ Dans ce mode, le tissage des aspects s'effectue **au moment de l'exécution**, e
 java -javaagent:libs/aspectjweaver.jar -cp "target/aoptest-1.0-SNAPSHOT.jar;libs/*" org.halim.aoptest.App
 ```
 
+## Important 
+🌝 Programmation orientée aspect (AOP) : l’aspect doit-il interagir avec le traitement métier ?
+Non, un aspect ne doit pas modifier ou influencer directement la logique métier principale.Il agit en périphérie, pour ajouter des comportements transversaux (aussi appelés cross-cutting concerns), tels que :
+🔐 Sécurité
 
+-  🩵 Logging
+
+- 💸 Transactions
+
+- ✅ Validation légère
+
+- ⏱ Métriques / performances
+
+- 🔀 Gestion d’erreurs
+
+**⚠️ Exemple de ce qu’il ne faut pas faire**
+```java
+Around("execution(* service.OrderService.*(..))")
+public Object myAspect(ProceedingJoinPoint joinPoint) throws Throwable {
+    // ❌ Mauvaise pratique : modifier les arguments métier
+    Object[] args = joinPoint.getArgs();
+    args[0] = null; // 😱 On casse le traitement métier
+    return joinPoint.proceed(args);
+}
+```
