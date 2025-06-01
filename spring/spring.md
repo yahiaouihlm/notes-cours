@@ -71,7 +71,7 @@ C’est la méthode la plus moderne, utilisant les annotations Java pour déclar
     }
 
     // Car.java
-    @Component
+    @Component // @Service 
     public class Car {
         @Autowired
         private Engine engine;
@@ -93,19 +93,76 @@ Explication :
 
 - **@ComponentScan** demande à Spring de scanner le package pour détecter les composants.
 
+### configuration du  contexte 
+```java
+   
+   public static void main (String [] args) {
+   //passer via  une class  de configuration 
+   ApplicationContext context = new AnnotationConfigApplicationContext(App.class);
+   
+   // passer via  un  fichier  de configuration  XML 
+   ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+   // demande a  spring instance qui  implement interface ISserice
+   IService service = context.getBean(IService.class); 
+
+   }
+
+```
 
 
+## 🧙‍♂️ `@Configuration` en Spring
+est une annotation Spring utilisée pour indiquer qu'une classe Java sert à définir des beans.
+Elle remplace les anciens fichiers XML (applicationContext.xml) en vous permettant de configurer vos beans directement en Java, de manière plus lisible et type-safe.
 
 
+```java
+
+@Service
+public class UserService implements IUserService { ... }
+
+@Service
+public class AdminService implements IUserService { ... }
 
 
+```
+
+Spring ne peut pas injecter automatiquement deux beans qui implémentent la même interface sans distinction,
+car il ne sait pas lequel utiliser lors de l'injection (ambiguïté).
+
+Autrement dit, si tu as plusieurs classes qui implémentent la même interface (comme IUserService),
+et que tu tries d’injecter cette interface sans précision, Spring lève une exception de type
+
+``Solution``
+```java
+@Autowired
+@Qualifier("userService")
+private IUserService userService;
+```
+### À quoi sert `@Qualifier` ?
+Quand tu as plusieurs beans du même type (par exemple plusieurs classes qui implémentent la même interface),
+Spring ne sait pas lequel injecter automatiquement car il y a une ambiguïté.
+
+L’annotation `@Qualifier` sert à distinguer précisément quel bean tu veux injecter.
+
+```java
+@Service("userService")
+public class UserService implements IUserService { ... }
+
+@Service("adminService")
+public class AdminService implements IUserService { ... }
+
+//  en suite  on  fait 
+@Autowired
+private IUserService userService; // spring  ne pas pas savoir quel instance de spring  faut-il injecter 
 
 
+@Autowired
+@Qualifier("userService") // indiquer à spring l'intance exacte à  injecter
+private IUserService userService;
 
 
-
-
-
+```
 
 ---
 

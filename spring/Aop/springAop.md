@@ -182,6 +182,7 @@ On peut le définir soit par une syntaxe de class, soit par une syntaxe `annotat
           @Before("execution(* service.OrderService.*(..))")
           public void logBefore(JoinPoint joinPoint) {
                 System.out.println("Appel de : " + joinPoint.getSignature());
+                joinPoint.getTarget();  //<= return l'object  anglobant du point de jointure (point cut)
             }
 
           @Before ("pc2() && args(code , montant)")
@@ -193,12 +194,123 @@ On peut le définir soit par une syntaxe de class, soit par une syntaxe `annotat
     ```
 
 
+<h1 align="center"> SpringAOP</h1> 
+
+est un module du framework `Spring` qui permet de gérer la programmation orientée aspect. Elle est utilisée pour séparer les préoccupations transversales (appelées cross-cutting concerns) de la logique métier principale.
+
+`Spring AOP` complète `Spring IoC` pour fournir une solution middleware très performante.
+
+L'approche de Spring AOP diffère de celle de la plupart des autres frameworks AOP comme **AspectJ**. Le but de Spring AOP **n’est pas** de fournir une implémentation complète de toutes les possibilités de l’AOP, mais plutôt de proposer une **intégration étroite entre l’AOP et Spring IoC** afin de résoudre les problèmes courants rencontrés dans les applications d’entreprise.
+
+Spring intègre de manière **transparente** Spring AOP et IoC avec **AspectJ**, ce qui permet à toutes les utilisations de l’AOP d’être prises en compte dans une architecture d'application cohérente, basée sur le framework Spring.
+
+<p align="center">
+    <img src="images/springAop.png" alt="joint point Aop">
+</p>
+
+# Explication des dépendances Spring (avec `spring-aspects`)
+
+## 1. `spring-core`
+Le noyau de Spring, fournit les fonctionnalités de base comme l'IoC, DI et des utilitaires essentiels.
+
+## 2. `spring-context`
+Fournit un contexte d'application complet basé sur IoC, prend en charge les annotations, le cycle de vie des beans, les événements, etc.
+
+## 3. `spring-beans`
+Gère la création, configuration et le cycle de vie des beans Spring.
+
+## 4. `spring-aop`
+Module pour la programmation orientée aspect (AOP) dans Spring. Permet la définition d’aspects, pointcuts, advices, et l’interception des méthodes.
+
+## 5. `spring-aspects`
+C’est un **module complémentaire** qui intègre l’implémentation complète d’AspectJ dans Spring.  
+Cela permet de tirer parti des **fonctionnalités avancées d’AspectJ**, telles que :  
+- Le tissage au moment de la compilation ou du chargement (compile-time / load-time weaving).  
+- Un support plus riche et puissant des aspects que celui de la simple AOP proxy-based de Spring.  
+
+**En résumé :**  
+- `spring-aop` fournit une AOP simple basée sur des proxies dynamiques (runtime).  
+- `spring-aspects` permet d’utiliser AspectJ complet (plus puissant, plus flexible) avec Spring.
+
+---
+
+# Résumé rapide
+
+| Dépendance      | Rôle principal                                      |
+|-----------------|----------------------------------------------------|
+| `spring-core`   | Noyau Spring, IoC, DI, utilitaires                  |
+| `spring-context`| Contexte d’application, annotations, gestion beans |
+| `spring-beans`  | Gestion création et lifecycle des beans             |
+| `spring-aop`    | AOP proxy-based simple et runtime                    |
+| `spring-aspects`| Intégration AspectJ complète (compile/load-time weaving) |
+
+---
+
+## Le tissage Spring AOP
+
+Le tissage (weaving) de Spring AOP se fait **à l’exécution**.  
+
+### Pourquoi Spring prend-il en compte les aspects ?
+
+Pour que l’aspect soit pris en compte, il faut que la classe aspect soit **enregistrée dans le conteneur Spring**.  
+Cela se fait généralement en ajoutant l’annotation __`@Component`__ (ou une autre annotation stéréotype) sur la `classe aspect`, ce qui permet à Spring de la détecter et de l’utiliser.
+àjouter aussi `@EnableAspectJAutoProxy` Cette annotation permet d’activer la prise en charge d’AOP (programmation orientée aspect) basée sur AspectJ dans une application Spring.
+```java
+@Aspect
+@Component
+@EnableAspectJAutoProxy
+public class LogAspect {
+    
+
+    IService service = context.getBean(IService.class);
+    service.getClass().getName() // spring return  jdk.proxy3.$Proxy40 car c'est la class proxy qui est appeller  par spring  pour  tisser le  aspect
+    
+    @Before("execution (* org.halim.aop.service.*(..) )")
+    public void  log  ()  {
+        System.out.println("this is beofre  proecess  method ");
+    }
+}
+```
+
+
+
+---
+
+### Fonctionnement de l’injection avec Aspect
+
+Pour chaque bean Spring, si des aspects s’appliquent à ses méthodes,  
+Spring crée un **proxy** autour de cet objet.  
+
+Ce proxy intercepte les appels pour appliquer les aspects,  
+puis délègue à l’instance réelle du bean.
+
+---
+
+### Exemple
+
+```java
+@Autowired
+private IUserService userService; // Spring injecte en réalité un proxy de UserService
+```
+Ce proxy fonctionne ainsi :
+```
+userService ---> proxy ---> (applique les aspects) ---> instance réelle de UserService
+```
+
+### Cas sans interface
+Si la classe ne possède pas d’interface, Spring utilise CGLIB pour créer le proxy,
+c’est-à-dire une sous-classe dynamique de la classe concrète. __dans ce cas  la class  en question ne devrait pas etre final car spring  ne pas hérité de cette class dans ce cas__
 
 
 
 
 
 
+
+
+
+
+---
 
 # 🛠️ Compilation et exécution d’un projet Java avec AspectJ
 
