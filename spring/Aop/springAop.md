@@ -269,6 +269,23 @@ public class LogAspect {
     public void  log  ()  {
         System.out.println("this is beofre  proecess  method ");
     }
+
+    // faire des aspects  avec des annotations  
+     @Around("@annotation(org.halim.aop.aspects.Log)") // toutes les méthode  posséde annotation @Log vont etre ciblé par  aspect
+    public Object  log  (ProceedingJoinPoint proceedingJoinPoint)  throws Throwable {  
+         System.out.println("-------------- aspect has  been applied ---------------");  
+        return proceed;
+    }
+
+
+   // utiliser  des aspect avec des annotaion avec params 
+    @Around(value = "@annotation(securedByAspect)" , argNames = "proceedingJoinPoint, securedByAspect") // attention dans ce cas  on passe la variable pas  objets ⚠️⚠️⚠️⚠️⚠️
+    public Object  log  (ProceedingJoinPoint proceedingJoinPoint,  SecuredByAspect securedByAspect)  throws Throwable {  
+        var proceed = proceedingJoinPoint.proceed();
+        System.out.println("La valeur  de annoattion est : "+ securedByAspect.roles()[0]);
+        return proceed;
+    }
+
 }
 ```
 
