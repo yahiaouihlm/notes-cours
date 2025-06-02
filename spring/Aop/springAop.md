@@ -43,7 +43,7 @@ les tisseurs  d'aspects se différencient sur deux points
 les  points  de jonctions sont des points du  programme autour desquels un ou  des  aspects ont été greffées 
  
   <p align="center">
-    <img src="images/jointpoint.png" alt="joint point Aop">
+    <img src="images/jointPoint.png" alt="joint point Aop">
   </p>
 
 - ## __`2. Les points de coupure (): PointCut`__ :
