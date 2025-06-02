@@ -57,6 +57,19 @@ __`@Target`__ est une métadonnée utilisée pour indiquer sur quels éléments 
 | `RECORD_COMPONENT` | Composants d’un `record` (Java 16+)                       | `record User(@MonAnnotation String name) {}`             |
 
 
+## Exemple 
+```java
+public @interface MonAnnotation {
+    String valeur(); // obligatoire à remplir
+    int count() default 1; // optionnel, avec une valeur par défaut
+}
+
+@MonAnnotation(valeur = "Exemple", count = 5) //  des  annotation avec des  arguments 
+public class MaClasse {}
+```
+
+
+
 
 ---
 <br><br>
