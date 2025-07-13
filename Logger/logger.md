@@ -35,7 +35,7 @@ Les ``loggers`` et les ``appenders`` peuvent tous deux avoir des filtres de nive
            ---> [ConsoleAppender] (niveau = DEBUG)
 ```
 
-## 🔥 Logback
+<h1 align="center"> 🔥 Logback </h2>
 __Logback__ est un framework de journalisation (logging) pour Java, conçu par les créateurs de Log4j. Il est aujourd’hui largement utilisé dans les applications Spring car il est :
 
 - Performant
@@ -54,7 +54,6 @@ La configuration de ``Logback`` se fait via des fichiers XML. Voici les options 
 
 - 🌱 __logback-spring.xml__ : Spécifique à Spring Boot : permet d'utiliser les expressions comme ${property.name} et d’injecter des variables du contexte Spring.
 
- 
 
 ```xml
 <configuration>
@@ -152,3 +151,22 @@ La configuration de ``Logback`` se fait via des fichiers XML. Voici les options 
     ```xml
          <appender-ref ref="CONSOLE" />
     ```
+
+- __`<sift>`__  est utilisé dans `Logback` pour créer des appendeurs dynamiques en fonction d’une valeur stockée dans le MDC (Mapped Diagnostic Context),
+                Écrire automatiquement les logs dans des fichiers différents selon une clé du MDC. C’est très utilisé dans les systèmes multi-utilisateurs ou multi-tenant, pour isoler les logs.
+
+
+
+<p align="center">
+    <img src="./appender.png" alt="architecture logback appender ">  
+</p>
+
+## 🔍 Différence entre FileAppender et RollingFileAppender dans Logback
+
+  | **Aspect**                     | **FileAppender**                                 | **RollingFileAppender**                                                             |
+  | ------------------------------ | ------------------------------------------------ | ----------------------------------------------------------------------------------- |
+  | **Fonction**                   | Écrit les logs dans **un seul fichier**.         | Écrit les logs dans un fichier, mais **gère la rotation** automatique des fichiers. |
+  | **Rotation** (taille, date...) | ❌ Aucune. Le fichier devient gros avec le temps. | ✅ Oui. Tu peux découper les fichiers par taille, date, ou les deux.                 |
+  | **Archivage automatique**      | ❌ Non. Tu dois gérer manuellement.               | ✅ Oui. Logback peut archiver et supprimer les anciens logs automatiquement.         |
+  | **Usage typique**              | Logs simples, peu volumineux.                    | Logs d'applications en production, ou gros volumes.                                 |
+
