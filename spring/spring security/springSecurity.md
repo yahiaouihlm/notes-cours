@@ -74,3 +74,160 @@ Lorsqu’une requête HTTP arrive sur un serveur d’application comme Tomcat, c
 <p align="center">
   <img src="sources/filterChain.png" alt="architecture spring Security ">
 </p>
+
+
+
+# 🔐 Spring Security – AuthenticationManager vs AuthenticationProvider
+
+## 1. Structure de base
+
+```
++-------------------------+
+| AuthenticationManager   | <--- appelé par le système de sécurité
++-------------------------+
+            |
+            | délègue à
+            v
++-------------------------+
+| AuthenticationProvider  | <--- ta classe personnalisée
++-------------------------+
+```
+
+---
+
+## 2. C’est quoi `AuthenticationProvider` ?
+
+Une interface qui contient la **logique métier pour authentifier un utilisateur**.
+
+Méthode clé :
+```java
+Authentication authenticate(Authentication authentication) throws AuthenticationException;
+```
+
+➡️ Ta classe personnalisée implémente cette méthode pour valider login/mot de passe.
+
+---
+
+## 3. C’est quoi `AuthenticationManager` ?
+
+Un **composite** qui contient une **liste de `AuthenticationProvider`**.
+
+Il essaie chaque provider dans l’ordre jusqu’à ce qu’un réussisse ou que tous échouent.
+
+---
+
+## 4. Pourquoi injecter le `AuthenticationProvider` ?
+
+Parce que Spring ne le fait **pas automatiquement**.  
+Tu dois dire explicitement au `AuthenticationManager` :  
+👉 "Utilise **ma** stratégie d'authentification".
+
+---
+
+## 5. Comment faire ?
+
+### ✅ Avec Spring Security moderne (Java config)
+
+```java
+@Bean
+public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    return config.getAuthenticationManager();
+}
+
+@Bean
+public AuthenticationProvider customAuthenticationProvider() {
+    return new MyCustomAuthenticationProvider();
+}
+
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        .authenticationProvider(customAuthenticationProvider())
+        .authorizeHttpRequests(...)
+        .formLogin();
+
+    return http.build();
+}
+```
+
+### Autre méthode avec `AuthenticationManagerBuilder` (ancienne façon)
+
+```java
+@Autowired
+public void configure(AuthenticationManagerBuilder auth) {
+    auth.authenticationProvider(myCustomAuthProvider);
+}
+```
+
+---
+
+## 6. Pourquoi `getAuthenticationManager()` retourne ton provider ?
+
+Quand tu fais :
+```java
+AuthenticationManager manager = authenticationConfiguration.getAuthenticationManager();
+```
+
+Spring Security :
+
+1. Cherche tous les `AuthenticationProvider` déclarés comme `@Bean`.
+2. Crée automatiquement un `ProviderManager` qui les contient.
+3. Te retourne ce `AuthenticationManager`.
+
+➡️ Donc si tu as fait :
+
+```java
+@Bean
+public AuthenticationProvider authenticationProvider() {
+    return new MyCustomAuthenticationProvider();
+}
+```
+
+Alors **il est utilisé automatiquement**.
+
+---
+
+## 7. Que fait Spring en coulisse ?
+
+```java
+List<AuthenticationProvider> providers = getAllProvidersFromContext();
+return new ProviderManager(providers);
+```
+
+---
+
+## 8. Et avec plusieurs `AuthenticationProvider` ?
+
+Spring les essaie **dans l'ordre**.  
+Chaque provider a une méthode :
+```java
+boolean supports(Class<?> authenticationClass);
+```
+
+Le premier qui retourne `true` est utilisé.
+
+---
+
+## ✅ Résumé
+
+| Élément | Rôle |
+|--------|------|
+| `AuthenticationProvider` | Contient la logique d'authentification personnalisée |
+| `AuthenticationManager` | Gère la liste des providers et les appelle |
+| Pourquoi injecter ? | Sinon Spring n'utilise pas ton provider |
+| Pourquoi `getAuthenticationManager()` fonctionne ? | Car ton provider est un `@Bean` dans le contexte |
+
+---
+
+## 🔍 Bonus : Vérifier s’il est utilisé
+
+Ajoute un log dans ta méthode `authenticate()` :
+```java
+@Override
+public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    System.out.println(">>> Appel de MonAuthenticationProvider !");
+    // logique...
+}
+```
+
+S’il n’est pas appelé → ton provider n’est pas bien enregistré.
