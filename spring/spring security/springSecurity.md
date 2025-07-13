@@ -62,7 +62,7 @@ public InMemoryUserDetailsManager inMemoryUserDetailsManager() {
 
 `Spring Security` offre  un  object qui s'appelle SecurityContextHolder qui  contient  l'object Authnitication 
 <p align="center">
-  <img src="sources/springContextHolder.png" alt="architecture spring mvc ">
+  <img src="springContextHolder.png" alt="architecture spring mvc ">
 </p>
 
 __Le Principal__ est l’objet qui contient les informations d’authentification de l’utilisateur, tandis que les __Authorities__ représentent ses rôles ou ses autorisations
@@ -72,7 +72,7 @@ Spring Security repose sur un mécanisme de filtres pour gérer l’authentifica
 Lorsqu’une requête HTTP arrive sur un serveur d’application comme Tomcat, celui-ci applique une série de filtres prédéfinis. Spring Security s’intègre dans cette chaîne de filtres (Filter Chain) en y injectant ses propres filtres de sécurité. Ainsi, il intercepte la requête et applique ses mécanismes d’authentification et d’autorisation avant de la transmettre à l’application.
 
 <p align="center">
-  <img src="sources/filterChain.png" alt="architecture spring Security ">
+  <img src="filterChain.png" alt="architecture spring Security ">
 </p>
 
 
