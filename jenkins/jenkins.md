@@ -154,6 +154,224 @@ tu peux créer
 * Agent `node-agent` avec Node.js installé
 
 
+## Cloud dans Jenkins
+
+Dans **Jenkins**, le terme **Cloud** désigne une configuration qui permet à Jenkins de **déléguer l’exécution de jobs à des agents dynamiques**, créés et détruits à la demande via une infrastructure externe (Docker, Kubernetes, AWS, etc.).
+
+## Agent statique par défaut dans Jenkins
+
+## 🔹 Définition
+- L’**agent statique par défaut** est le **"Built-In Node"** (anciennement appelé "master").  
+- C’est la **machine où Jenkins est installé**.  
+- Il est **toujours présent** et ne change pas (contrairement aux agents dynamiques).
+
+---
+
+## 🔹 Fonctionnement
+- Par défaut, si aucun autre agent n’est configuré, les jobs s’exécutent sur cet agent.  
+- Il combine deux rôles :
+  - **Contrôleur Jenkins** → gère l’UI, les jobs, les plugins, la planification.  
+  - **Agent d’exécution** → exécute directement les jobs sur la même machine.
+
+---
+
+## 🔹 Limites
+- Risque de surcharge si tous les jobs tournent dessus.  
+- Bonne pratique : **désactiver l’exécution de jobs sur le contrôleur** et utiliser des agents dédiés (statiques ou dynamiques).
+
+---
+
+## 🔹 Résumé
+👉 **Agent statique par défaut = le contrôleur Jenkins (la machine hôte).**  
+Toujours présent, contrairement aux agents "Cloud" qui sont créés et détruits à la demande.
+
+
+
+---
+
+## Pourquoi utiliser le Cloud dans Jenkins ?
+- Ne pas dépendre uniquement d’agents statiques (toujours actifs).  
+- **Provisionner dynamiquement** des agents uniquement quand un job en a besoin.  
+- Réduire les coûts et mieux gérer les ressources.  
+- Faciliter le **scaling automatique**.
+
+---
+
+
+## Exemples de Clouds disponibles
+- **Kubernetes Cloud** → Jenkins déploie des pods dynamiques dans un cluster Kubernetes.  
+- **Docker Cloud** → Jenkins démarre des conteneurs Docker pour exécuter les jobs.  
+- **Amazon EC2 Cloud** → Jenkins lance des instances EC2 comme agents.  
+- **OpenStack Cloud** → Provisionnement de VMs sur OpenStack.  
+- **VMware vSphere Cloud** → Création de machines virtuelles.  
+
+---
+
+## Docker Cloud dans Jenkins
+Oui ✅, cela signifie que ton **job peut s’exécuter dans un conteneur Docker** au lieu de l’agent directement.
+
+### Fonctionnement :
+1. Jenkins est connecté à un démon Docker (local ou distant).  
+2. Tu définis une **Docker Agent Template** (image Docker à utiliser).  
+3. Lorsqu’un job démarre :
+   - Jenkins crée un conteneur basé sur cette image.  
+   - Les étapes du pipeline/job s’exécutent dans ce conteneur.  
+   - Le conteneur est supprimé après le job.  
+
+---
+
+## Exemple de Pipeline avec Docker
+```groovy
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.9.6-eclipse-temurin-17'
+            args '-v /root/.m2:/root/.m2' // partage du cache Maven local
+        }
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    }
+}
+```
+# 📑 Exemple de Jenkinsfile documenté
+
+Ce fichier décrit un pipeline Jenkins déclaré (Pipeline-as-Code).  
+Il est écrit en **Groovy** et doit être placé à la racine du dépôt (nommé `Jenkinsfile`).  
+
+---
+
+## 🔹 Structure générale
+Un pipeline Jenkins est composé de :  
+- **agent** → définit où s’exécutent les jobs (machine, Docker, Kubernetes, etc.)  
+- **options** → règles globales (timeout, conservation des builds, etc.)  
+- **environment** → variables d’environnement globales  
+- **stages** → étapes principales (build, test, déploiement)  
+- **post** → actions à exécuter après le pipeline (succès, échec, nettoyage)
+
+---
+
+## 🔹 Exemple complet
+
+```groovy
+pipeline {
+    /*
+     * Définition de l'agent
+     * Ici, on utilise un conteneur Docker comme environnement d'exécution.
+     */
+    agent {
+        docker {
+            image 'maven:3.9.6-eclipse-temurin-17' // image Docker utilisée
+            args '-v /root/.m2:/root/.m2'        // partage du cache Maven local
+        }
+    }
+
+    /*
+     * Options globales
+     */
+    options {
+        timeout(time: 30, unit: 'MINUTES')       // limite d'exécution
+        buildDiscarder(logRotator(numToKeepStr: '10')) // garder seulement 10 builds
+    }
+
+    /*
+     * Variables d'environnement globales
+     */
+    environment {
+        APP_NAME = "my-app"
+        APP_VERSION = "1.0.0"
+    }
+
+    /*
+     * Définition des étapes (stages)
+     */
+    stages {
+
+        stage('Checkout') {
+            steps {
+                echo "📥 Récupération du code source..."
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo "🔨 Compilation du projet avec Maven"
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo "🧪 Lancement des tests unitaires"
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml' // publier les résultats de tests
+                }
+            }
+        }
+
+        stage('Analyse') {
+            steps {
+                echo "🔎 Analyse du code (SonarQube ou autre)"
+                // withSonarQubeEnv('sonar-server') {
+                //     sh 'mvn sonar:sonar'
+                // }
+            }
+        }
+
+        stage('Package & Archive') {
+            steps {
+                echo "📦 Archivage du build"
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+
+        stage('Deploy (staging)') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                echo "🚀 Déploiement en environnement de staging"
+                sh "scp target/${APP_NAME}-${APP_VERSION}.jar user@staging:/apps/"
+            }
+        }
+
+        stage('Deploy (production)') {
+            when {
+                branch 'main'
+            }
+            steps {
+                input message: "Confirmer le déploiement en production ?"
+                echo "🚀 Déploiement en production"
+                sh "scp target/${APP_NAME}-${APP_VERSION}.jar user@prod:/apps/"
+            }
+        }
+    }
+
+    /*
+     * Post actions (toujours exécutées en fin de pipeline)
+     */
+    post {
+        success {
+            echo "✅ Pipeline terminé avec succès !"
+        }
+        failure {
+            echo "❌ Échec du pipeline."
+        }
+        always {
+            cleanWs() // nettoyage du workspace
+        }
+    }
+}
+
+
 
 # Jenkins configuration
 ## 1. Configuration globale (Manage Jenkins → Configure System)
