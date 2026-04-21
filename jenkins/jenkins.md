@@ -270,6 +270,13 @@ pipeline {
         }
     }
 
+    /* ajouter maven  comme un outil mais pas directement depuis une  image*/
+      tools {
+        maven 'Maven_3.9.6'  // Nom que tu as configuré dans Jenkins (Global Tool Configuration)
+        jdk 'JDK17'          // (optionnel) si tu veux aussi forcer une version de JDK
+    }
+
+
     /*
      * Options globales
      */

@@ -411,3 +411,37 @@ En arrière-plan, `Angular CLI` utilise `Webpack`, un outil de bundling, pour ra
 - __`ng generate pipe | ng g p [pipe name]`__ : génère un pipe Angular avec le nom spécifié.
 
 - __`ng generate module | ng g m [module name]`__ : génère un module Angular avec le nom spécifié.
+
+
+---
+---
+
+# Utilisation  de angular
+```javascript
+  ng serve --configuration=integration // lancer avec un configuration en integration
+```
+## Les inputes 
+Pour injecter des variables dans des balises Angular, on peut utiliser un @Input dans le composant :
+```ts
+  @Input({ 
+    required: true // la variable  doit etre renseigné 
+    transform(value : Int) =>{  // <== appliquer des  changement  sur  des valeurs
+      value.age = value.age /2 
+    }
+
+
+  }) age: number = 12;
+```
+Ensuite, dans le template parent, on passe la valeur au composant enfant avec la syntaxe property binding :
+```html
+<!--[] => uniquement si la variable !=  string -->
+<personnel [age]="12"></personnel>
+```
+
+## signal input
+```ts 
+  age : InputSignal <Int>=  input.required
+```
+
+
+## Formulaire 

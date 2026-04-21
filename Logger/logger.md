@@ -122,10 +122,12 @@ La configuration de ``Logback`` se fait via des fichiers XML. Voici les options 
 - __``<rollingPolicy>``__ : Définit la politique de rotation des fichiers de log, C'est-à-dire que les fichiers de log seront archivés périodiquement selon une base temporelle. Utilisé avec ``RollingFileAppender`` , Attribut : class=``"TimeBasedRollingPolicy"`` pour une rotation basée sur la date.
 
     ```xml
-    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-        <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>
-        <maxHistory>7</maxHistory>
-    </rollingPolicy>
+         <!-- les fichier  seront  archivée pour 7J -->                                         <!-- les fichier  seront  archivée dans des taille  de 100 MB pour 30J -->
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> ||    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern>                    <fileNamePattern>logs/app.%d{yyyy-MM-dd}.log</fileNamePattern> 
+        <maxHistory>7</maxHistory>                                                         <maxFileSize>100MB</maxFileSize>  
+    </rollingPolicy>                                                                         <maxHistory>7</maxHistory>  
+                                                                                       </rollingPolicy> 
     ```
     - ``fileNamePattern`` : format de nom pour les fichiers archivés
     - ``maxHistory`` : nombre de fichiers archivés à conserver (ex : 7 jours) (Tout fichier de log archivé (par date) sera supprimé après 7 jours.)

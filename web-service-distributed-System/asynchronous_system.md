@@ -46,3 +46,18 @@ Les systèmes de distribution **asynchrones** reposent souvent sur un **broker**
 
 - **Queue** = un message → un consommateur  
 - **Topic** = un message → plusieurs consommateurs
+
+
+## KAFKA 
+Apache Kafka est une plateforme de diffusion (streaming) distribuée, développée en Scala et Java.
+
+Une plateforme de streaming comme Kafka offre trois fonctionnalités principales :
+
+- Publication et abonnement aux flux de données :
+Elle permet aux applications clientes de publier et de s'abonner à des flux d'enregistrements, de manière similaire à une file d'attente de messages ou à un système de messagerie d'entreprise comme les brokers JMS (par exemple ActiveMQ) ou AMQP (comme RabbitMQ).
+
+- Stockage durable et tolérant aux pannes :
+Kafka permet de stocker les flux d’enregistrements de manière fiable, en assurant la durabilité des données et la tolérance aux pannes.
+
+- Traitement en temps réel des flux :
+Il est possible de traiter les flux d’enregistrements au fur et à mesure de leur arrivée, ce qu’on appelle le traitement de flux en temps réel (real-time stream processing).
