@@ -41,7 +41,9 @@ exemple : comment  tomcat détecte une classe `HttpServlet`
     - des classes annotées avec `@WebServlet`
 
     👉 Il crée ensuite une instance de la classe trouvée (qui étend `HttpServlet`) et la mappe aux URLs.
-
+<p align="center">
+    <img src="exemple-servelet.png" alt="servlet-life-cycle">
+</p>
 
 ## ✅ Côté Spring Boot :
 N’utilise ni `web.xml`, ni `@WebServlet`
