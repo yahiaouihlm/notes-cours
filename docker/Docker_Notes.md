@@ -16,7 +16,7 @@ Ainsi, l'application peut être lancée de la même manière sur n'importe quell
 
 ## 📦 Commandes essentielles
 
-```bash
+```docker
 docker pull image_name         # télécharger une image
 docker run image_name          # creer et lancer une image
 docker ps                      # conteneurs actifs
@@ -51,8 +51,76 @@ docker exec -u 0 -it nom_container /bin/bash     # entrer en root
 docker logs nom_container                        # voir les logs
 docker inspect container_id                      # métadonnées du conteneur
 ```
+---
+
+## 📦 Les volumes 
+   ``les volumes Docker`` : c'est un mécanisme qui permet de conserver des données en  dehors du  conteneur Dcoker.
+  
+   <p align="center">
+    <img src="./sources/docker-storage.png" alt="architecture de hibernet">
+  </p>
+
+ ### types de volumes Docker 
+  1. __Bind Mount__ : permet de connecter directement un dossier ou un fichier de ton ordinateur à un dossier dans un conteneur
+  exemple : 
+      ``` 
+        TON PC                         CONTENEUR
+      ────────                       ──────────
+      mon-projet/  ───────────────►  /app/
+        │                              │
+        ├── app.py                     ├── app.py
+        └── requirements.txt           └── requirements.txt
+      ```
+      ```docker
+      docker run -v ./mon-projet:/app mon-image 
+          # ./mon-projet → dossier sur ton ordinateur
+          # /app → dossier dans le conteneur
+      
+      ```
+
+  
+  2. __volume Docker__: Permet de stocker des données gérées par Docker, indépendamment du cycle de vie du conteneur.
+      ```
+       DOCKER                         CONTENEUR
+      ────────                       ──────────
+      💾 volume                      /data/
+        │                              │
+        |         ───────────────►   fichiers
+        |
+        └──  Docker gère le stockage    
+      ```
+     On crée d'abord un volume :
+     ```docker
+     docker volume create mon-volume
+     ```
+     Puis on le monte dans un conteneur :
+     ```docker
+     docker run -v mon-volume:/data mon-image
+        # mon-volume → volume géré par Docker
+        #/data → emplacement dans le conteneur
+     ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ---
+
+
+
+
+
+
 
 
 # 📘 Notes techniques : Docker
