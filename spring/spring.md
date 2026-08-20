@@ -34,8 +34,16 @@ Dans cette méthode, on déclare les objets dans un fichier XML.
 
     <bean id="engine" class="com.example.Engine" />
 
+      <!-- injection setter-->
     <bean id="car" class="com.example.Car">
         <property name="engine" ref="engine" />
+    </bean>
+    
+    <!-- injection constructor-->
+    <bean id="studentBean" class="fr.sqli.halim.services.Student">
+     <constructor-arg name="name" value="halim"/>
+    <constructor-arg name="fullName" value="monkey"/>
+    <constructor-arg name="age" value="15"/>
     </bean>
 
 </beans>
@@ -52,7 +60,7 @@ Dans cette méthode, on déclare les objets dans un fichier XML.
     ApplicationContext context = new ClassPathXmlApplicationConext("config.xml")
     
     // pour avoir le  Bean 
-    IService service =(IService) context.getBean ("service") //nom dans le fichier xml
+    IService service =context.getBean ("service",IService.class) //nom dans le fichier xml
 
 ```
 
@@ -163,6 +171,67 @@ private IUserService userService;
 
 
 ```
+
+```java
+    @Configuration
+    @Profile("prod")
+    @PropertySource("classpath:application.properties") // dire à spring  de charger le fichier properties dans la mémoire 
+
+    public class SpringConfiguration {
+
+
+        @Value("halim.database.password") // charger la variable 
+        String passString
+
+
+@Conditional(Administration Administration.class) // utilisation la methode uniquement sous la consition (implements Condition)
+        @Bean(name = "universityBean")
+        public University university () {
+            return new University(List.of(studentBean()));
+        }
+
+        @Bean
+          @Scope("prototype") // creer une nouvelle instance à chaque fois 
+         @Bean(initMethod = "sayHello") // éxecuter la methode 'sayHello' définie dans Student aprés  initialiser le Bean
+         @Bean(destroyMethod = "sayHello") // uniquement apres la fermeture de contexte spring  pas avec arret du programme 
+    
+        public Student studentBean () {
+        var student=  new Student();
+
+        student.setAge(26);
+        student.setFullName("mokey D");
+        student.setName("Luffy");
+
+        return student; 
+        }
+
+
+
+// permet d'appler des traitement post - pres initilialisation de chaque bean 
+// from interface  BeanPostProcessor
+          @Override
+    public Object postProcessBeforeInitialization( Object bean,  String beanName) {
+        System.out.println("AVANT : " + beanName);
+        return bean;
+    }
+
+      @Override
+    public Object postProcessAfterInitialization( Object bean,  String beanName) {
+        System.out.println("APRES : " + beanName);
+        return bean;
+    }
+
+
+
+    
+    }
+
+
+```
+
+
+
+
 
 ---
 

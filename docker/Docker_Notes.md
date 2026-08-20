@@ -99,11 +99,19 @@ docker inspect container_id                      # métadonnées du conteneur
         # mon-volume → volume géré par Docker
         #/data → emplacement dans le conteneur
      ```
+ ## Commandes pour les volumes : 
 
+```docker
+  . docker volume ls #Lister tous les volumes Docker
+  . docker volume create my_volume #Créer un volume Docker
+  . docker volume rm my_volume # Supprimer un volume Docker
+  . docker inspect my_volume # Afficher les informations (métadonnées) d'un volume Docker
+```
+exemple  : 
 
-
-
-
+```docker
+ docker run -v my_colume:/var/lib/postgresql  -e  POSTGRES_PASSWORD=password --name my_container postgres
+```
 
 
 
